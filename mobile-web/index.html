@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Astronomy DZ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./assets/logo.png?v=official-logo-20260215">
+    <link rel="apple-touch-icon" href="./assets/logo.png?v=official-logo-20260215">
+    <script>
+      (() => {
+        if (location.protocol === "http:" || location.protocol === "https:") {
+          const manifest = document.createElement("link");
+          manifest.rel = "manifest";
+          manifest.href = "./manifest.webmanifest";
+          document.head.appendChild(manifest);
+        }
+      })();
+    </script>
+    <meta name="theme-color" content="#06142f">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <section class="welcome-billboard" aria-label="لوحة ترحيب">
+            <p class="billboard-text">مرحبا بك في تطبيق Astronomy DZ</p>
+            <span class="billboard-sub">استعد لرحلة فلكية بصرية تفاعلية</span>
+        </section>
+
+        <header class="header">
+            <div class="logo-shell">
+                <img src="assets/logo.png" alt="Astronomy DZ Logo">
+            </div>
+            <div class="brand">
+                <h1>Astronomy DZ</h1>
+                <p>بوابة فلكية تفاعلية بتجربة سينيمائية حديثة للاستكشاف والتعلّم.</p>
+            </div>
+        </header>
+
+        <main class="menu">
+            <a class="menu-card" href="./bot.html">
+                <span class="menu-icon">
+                    <img src="./assets/menu-icons/bot.jpg" alt="أيقونة البوت الفلكي">
+                </span>
+                <span class="menu-copy">
+                    <strong>البوت الفلكي</strong>
+                    <small>شرح عميق ومفصل بأسلوب الأستاذ.</small>
+                </span>
+                <span class="menu-arrow">↗</span>
+            </a>
+
+            <a class="menu-card" href="./planets.html">
+                <span class="menu-icon">
+                    <img src="./assets/menu-icons/planets.png" alt="أيقونة الكواكب">
+                </span>
+                <span class="menu-copy">
+                    <strong>الكواكب</strong>
+                    <small>مقارنات، مسابقات، وإنجازات الاستكشاف.</small>
+                </span>
+                <span class="menu-arrow">↗</span>
+            </a>
+
+            <a class="menu-card" href="./scholars.html">
+                <span class="menu-icon">
+                    <img src="./assets/menu-icons/scholars.png" alt="أيقونة المستكشفين">
+                </span>
+                <span class="menu-copy">
+                    <strong>مستكشفون</strong>
+                    <small>علماء الفلك عبر التاريخ وأثرهم العلمي.</small>
+                </span>
+                <span class="menu-arrow">↗</span>
+            </a>
+
+            <a class="menu-card" href="./quran.html">
+                <span class="menu-icon">
+                    <img src="./assets/menu-icons/quran.png" alt="أيقونة الإعجاز العلمي">
+                </span>
+                <span class="menu-copy">
+                    <strong>الإعجاز العلمي</strong>
+                    <small>ربط معرفي بين النص القرآني والظواهر الفلكية</small>
+                </span>
+                <span class="menu-arrow">↗</span>
+            </a>
+
+            <a class="menu-card" id="orbitEntryLink" href="./orbit.html">
+                <span class="menu-icon">
+                    <img src="./assets/menu-icons/orbit.png" alt="أيقونة المدارات">
+                </span>
+                <span class="menu-copy">
+                    <strong>محاكاة المدارات</strong>
+                    <small>استعراض بصري للمدارات وحركة الأجرام.</small>
+                </span>
+                <span class="menu-arrow">↗</span>
+            </a>
+
+            <a class="menu-card" href="./space-explorer.html">
+                <span class="menu-icon">
+                    <img src="./assets/menu-icons/space-explorer.png" alt="أيقونة المستكشف الفضائي">
+                </span>
+                <span class="menu-copy">
+                    <strong>Space Explorer XR</strong>
+                    <small>هبوط ومشي واستكشاف كوكبي أعمق.</small>
+                </span>
+                <span class="menu-arrow">↗</span>
+            </a>
+
+            <a class="menu-card" href="./settings.html">
+                <span class="menu-icon">
+                    <img src="./assets/menu-icons/settings.png" alt="أيقونة الإعدادات">
+                </span>
+                <span class="menu-copy">
+                    <strong>الإعدادات</strong>
+                    <small>ضبط الواجهة والصوت وتجربة الاستخدام.</small>
+                </span>
+                <span class="menu-arrow">↗</span>
+            </a>
+        </main>
+    </div>
+
+	    <script>
+	      (() => {
+	        const link = document.getElementById("orbitEntryLink");
+	        if (!link) return;
+	        const isNativeApp = (
+	          location.protocol === "capacitor:"
+	          || (
+	            typeof window.Capacitor?.isNativePlatform === "function"
+	            && window.Capacitor.isNativePlatform()
+	          )
+	        );
+	        const isTouchLike = (
+	          window.matchMedia?.("(pointer: coarse)")?.matches
+	          || ("ontouchstart" in window)
+	          || window.innerWidth <= 900
+	        );
+	        if (!isTouchLike && !isNativeApp) return;
+	        link.href = "./orbit.html?profile=mobile";
+	        const desc = link.querySelector(".menu-copy small");
+	        if (desc) desc.textContent = "نسخة هاتف خفيفة وسريعة للاستكشاف.";
+	      })();
+	    </script>
+    <script src="./pwa-register.js"></script>
+</body>
+</html>

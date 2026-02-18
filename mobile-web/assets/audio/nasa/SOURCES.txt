@@ -1,0 +1,17 @@
+NASA audio sources used in this project (downloaded on 2026-02-14):
+
+1) Mars first microphone recording (Perseverance, Sol 1)
+https://science.nasa.gov/resource/first-audio-recording-of-sounds-on-mars
+Direct file:
+https://assets.science.nasa.gov/content/dam/science/psd/mars/downloadable_items/4/5/45825_SCAM_MIC_SOL001_RUN001.mp3
+
+2) Mars wind recording (Perseverance SuperCam, Sol 4)
+https://science.nasa.gov/resource/perseverance-rovers-supercam-records-wind-on-mars
+Direct file:
+https://assets.science.nasa.gov/content/dam/science/psd/mars/downloadable_items/4/5/45828_SCAM_MIC_SOL004_RUN001.mp3
+
+3) Ingenuity flight audio on Mars
+https://science.nasa.gov/resource/listen-to-nasas-ingenuity-mars-helicopter-in-flight-2
+Direct file:
+https://assets.science.nasa.gov/content/dam/science/psd/mars/downloadable_items/4/46087_20210507_HelicopterFliesOnMars.mp3
+

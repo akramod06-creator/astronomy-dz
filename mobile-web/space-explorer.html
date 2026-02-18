@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (() => {
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        const manifest = document.createElement("link");
+        manifest.rel = "manifest";
+        manifest.href = "./manifest.webmanifest";
+        document.head.appendChild(manifest);
+      }
+    })();
+  </script>
+  <meta name="theme-color" content="#0d274c" />
+  <title>Space Explorer XR</title>
+  <style>
+    :root {
+      --bg: #02050d;
+      --panel: rgba(8, 14, 28, 0.76);
+      --line: rgba(130, 184, 255, 0.28);
+      --txt: #deecff;
+      --muted: #9bb4da;
+      --accent: #8fd0ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--txt);
+      background:
+        radial-gradient(1200px 800px at 15% 8%, rgba(43, 89, 181, 0.26), transparent 65%),
+        radial-gradient(900px 700px at 90% 90%, rgba(32, 114, 152, 0.22), transparent 67%),
+        linear-gradient(165deg, #09142a, var(--bg) 64%);
+      overflow: hidden;
+    }
+
+    #app {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    #panel {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(8, 17, 34, 0.9), rgba(6, 13, 26, 0.74));
+      backdrop-filter: blur(5px);
+      padding: 12px;
+      overflow: auto;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      z-index: 6;
+    }
+
+    #title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    #sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .box {
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(8, 16, 32, 0.65);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    label {
+      font-size: 13px;
+      color: #c7dcff;
+    }
+
+    select,
+    button {
+      border: 1px solid rgba(137, 191, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(10, 24, 45, 0.94);
+      color: #dbeaff;
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    button {
+      cursor: pointer;
+      background: linear-gradient(180deg, #174277, #133660);
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: none;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    #status {
+      color: #b4daff;
+      font-size: 12px;
+      border: 1px solid rgba(126, 195, 255, 0.26);
+      border-radius: 8px;
+      padding: 7px 8px;
+      background: rgba(8, 18, 36, 0.62);
+    }
+
+    #info {
+      font-size: 13px;
+      line-height: 1.7;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(8, 16, 32, 0.62);
+      white-space: pre-line;
+    }
+
+    #viewport {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #050a15;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #hud {
+      position: absolute;
+      inset-inline: 10px;
+      top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .hud-box {
+      border: 1px solid rgba(132, 192, 255, 0.26);
+      border-radius: 9px;
+      background: rgba(7, 15, 30, 0.58);
+      backdrop-filter: blur(4px);
+      padding: 6px 9px;
+      font-size: 12px;
+      color: #d7e9ff;
+      white-space: pre-line;
+    }
+
+    #reticle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 28px;
+      height: 28px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(169, 223, 255, 0.55);
+      box-shadow: 0 0 14px rgba(96, 185, 255, 0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 5;
+    }
+
+    #reticle::before,
+    #reticle::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(177, 227, 255, 0.72);
+    }
+
+    #reticle::before {
+      width: 12px;
+      height: 1px;
+    }
+
+    #reticle::after {
+      width: 1px;
+      height: 12px;
+    }
+
+    #paneHost {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      z-index: 7;
+      pointer-events: auto;
+    }
+
+    #help {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 6;
+      max-width: 360px;
+      border: 1px solid rgba(130, 190, 255, 0.26);
+      border-radius: 9px;
+      background: rgba(5, 12, 24, 0.58);
+      padding: 8px 10px;
+      color: #b6d4ff;
+      font-size: 12px;
+      line-height: 1.65;
+      white-space: pre-line;
+      pointer-events: none;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    @media (max-width: 1100px) {
+      #app {
+        grid-template-columns: 1fr;
+      }
+
+      #panel {
+        max-height: 45vh;
+      }
+
+      #viewport {
+        min-height: 55vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <aside id="panel">
+      <div id="title">Space Explorer XR</div>
+      <div id="sub">محاكاة تفاعلية في المتصفح: هبوط كوكبي، مناخ ديناميكي، صوت واقعي، وتجربة WebXR.</div>
+
+      <div class="box">
+        <div class="row">
+          <label for="planetSelect">الكوكب</label>
+          <select id="planetSelect"></select>
+        </div>
+        <div class="row">
+          <button id="landBtn">هبوط</button>
+          <button id="orbitBtn" disabled>عودة للمدار</button>
+        </div>
+        <div class="row">
+          <button id="walkBtn" disabled>تفعيل التجول</button>
+          <button id="soundBtn">تشغيل الصوت</button>
+        </div>
+      </div>
+
+      <div id="status">الحالة: وضع مداري</div>
+      <div id="info">اختر كوكبًا ثم ابدأ الهبوط.</div>
+      <div class="muted">
+        تم معايرة القيم المناخية والصوتية اعتمادًا على بيانات NASA/JPL/ESA.
+      </div>
+    </aside>
+
+    <main id="viewport">
+      <div id="hud">
+        <div id="hudLeft" class="hud-box">MODE: ORBIT</div>
+        <div id="hudRight" class="hud-box">AUDIO: OFF</div>
+      </div>
+      <div id="reticle"></div>
+      <div id="paneHost"></div>
+      <div id="help">
+WASD: حركة
+SPACE: قفز (على السطوح الصلبة)
+SHIFT: نزول بطيء في الغازات
+MOUSE: توجيه (بعد تفعيل التجول)
+VR: اضغط Enter VR ثم زر التحكم للتحرك للأمام
+      </div>
+    </main>
+  </div>
+
+  <script src="./pwa-register.js"></script>
+  <script type="module" src="./space-explorer.js?v=20260217-cdnthree1"></script>
+</body>
+</html>

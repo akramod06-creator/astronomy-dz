@@ -1,0 +1,8 @@
+{
+  "appId": "com.astronomydz.app",
+  "appName": "Astronomy DZ",
+  "webDir": "mobile-web",
+  "server": {
+    "androidScheme": "https"
+  }
+}

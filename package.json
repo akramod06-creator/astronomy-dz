@@ -1,0 +1,23 @@
+{
+  "name": "astronomy-dz-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Astronomy DZ web app with native Android wrapper via Capacitor.",
+  "scripts": {
+    "mobile:prepare": "node scripts/prepare-mobile.cjs",
+    "mobile:init": "npm run mobile:prepare && npx cap add android",
+    "mobile:copy": "npm run mobile:prepare && npx cap copy android",
+    "mobile:sync": "npm run mobile:prepare && npx cap sync android",
+    "mobile:open": "npx cap open android",
+    "mobile:android": "npm run mobile:sync && npm run mobile:open",
+    "mobile:apk:debug": "cd android && gradlew.bat assembleDebug",
+    "mobile:apk:release": "cd android && gradlew.bat assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0"
+  }
+}

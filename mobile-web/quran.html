@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (() => {
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        const manifest = document.createElement("link");
+        manifest.rel = "manifest";
+        manifest.href = "./manifest.webmanifest";
+        document.head.appendChild(manifest);
+      }
+    })();
+  </script>
+  <meta name="theme-color" content="#07142d" />
+  <title>الإعجاز العلمي | Astronomy DZ</title>
+  <style>
+    :root {
+      --bg0: #040a16;
+      --bg1: #0a1d3f;
+      --line: rgba(126, 198, 255, 0.3);
+      --panel: rgba(7, 19, 43, 0.78);
+      --text: #e8f3ff;
+      --muted: #a9c4e4;
+      --gold: #f7c172;
+      --cyan: #84d4ff;
+      --ok: #83ffbe;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 760px at 15% 7%, rgba(45, 104, 188, 0.25), transparent 64%),
+        radial-gradient(900px 680px at 88% 92%, rgba(27, 129, 166, 0.2), transparent 68%),
+        linear-gradient(164deg, var(--bg1), var(--bg0) 66%);
+      padding: 16px;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(132, 212, 255, 0.04) 0,
+        rgba(132, 212, 255, 0.01) 2px,
+        transparent 3px
+      );
+      background-size: 100% 5px;
+      mix-blend-mode: screen;
+    }
+
+    .app {
+      width: min(1280px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(5, 13, 29, 0.84);
+      backdrop-filter: blur(9px);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.46);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+
+    .top a {
+      text-decoration: none;
+      color: #e2f0ff;
+      border: 1px solid rgba(132, 212, 255, 0.34);
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: rgba(8, 21, 46, 0.8);
+      font-size: 13px;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .top a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(247, 193, 114, 0.8);
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:
+        radial-gradient(600px 260px at 90% 10%, rgba(247, 193, 114, 0.15), transparent 72%),
+        rgba(7, 19, 43, 0.76);
+      padding: 13px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hero h1 {
+      font-size: clamp(22px, 2.9vw, 34px);
+      line-height: 1.34;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .note {
+      border: 1px solid rgba(247, 193, 114, 0.45);
+      border-radius: 9px;
+      background: rgba(66, 44, 16, 0.26);
+      color: #ffe7c4;
+      padding: 8px 10px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .ramadan-box {
+      border: 1px solid rgba(247, 193, 114, 0.45);
+      border-radius: 11px;
+      background:
+        radial-gradient(420px 180px at 100% 0, rgba(247, 193, 114, 0.11), transparent 72%),
+        rgba(24, 22, 17, 0.34);
+      padding: 10px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .ramadan-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ramadan-head strong {
+      color: #ffe8c8;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .ramadan-badge {
+      border: 1px solid rgba(247, 193, 114, 0.52);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(85, 56, 21, 0.32);
+      color: #ffe6bf;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+
+    .ramadan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+    }
+
+    .ramadan-item {
+      border: 1px solid rgba(132, 212, 255, 0.34);
+      border-radius: 9px;
+      background: rgba(7, 19, 43, 0.72);
+      padding: 8px 9px;
+      display: grid;
+      gap: 2px;
+    }
+
+    .ramadan-item span {
+      color: #c7def9;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .ramadan-item strong {
+      color: #f6e2bd;
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .ramadan-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ramadan-actions button {
+      border: 1px solid rgba(132, 212, 255, 0.38);
+      border-radius: 9px;
+      padding: 7px 10px;
+      background: rgba(7, 19, 43, 0.86);
+      color: #def0ff;
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .ramadan-actions button:hover {
+      border-color: rgba(247, 193, 114, 0.72);
+      transform: translateY(-1px);
+    }
+
+    .ramadan-subnote {
+      color: #d8b98a;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .ramadan-plan {
+      border: 1px solid rgba(132, 212, 255, 0.3);
+      border-radius: 9px;
+      background: rgba(5, 15, 33, 0.74);
+      padding: 8px 9px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .ramadan-plan-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ramadan-plan-row span {
+      color: #cde3fb;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .ramadan-plan-row strong {
+      color: #ffe6bf;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .ramadan-progress {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(123, 172, 224, 0.26);
+      overflow: hidden;
+    }
+
+    .ramadan-progress > div {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(247, 193, 114, 0.82), rgba(137, 221, 255, 0.82));
+      transition: width 0.28s ease;
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+    }
+
+    .stat {
+      border: 1px solid rgba(132, 212, 255, 0.34);
+      border-radius: 10px;
+      background: rgba(7, 19, 43, 0.8);
+      padding: 9px 10px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .stat .v {
+      color: var(--ok);
+      font-weight: 700;
+      font-size: 23px;
+      line-height: 1.1;
+    }
+
+    .stat .k {
+      color: #c2dbf8;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.65fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #f1f8ff;
+    }
+
+    .ayah {
+      border: 1px solid rgba(132, 212, 255, 0.3);
+      border-radius: 9px;
+      background: rgba(5, 15, 33, 0.8);
+      padding: 8px 10px;
+      color: #d7e9ff;
+      line-height: 2;
+      font-size: 15px;
+    }
+
+    .science {
+      color: #c6dcf8;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #9fc0e4;
+    }
+
+    .sources {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sources a {
+      text-decoration: none;
+      color: var(--cyan);
+      border: 1px solid rgba(132, 212, 255, 0.34);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(5, 16, 35, 0.86);
+      font-size: 12px;
+      transition: border-color 0.18s ease;
+    }
+
+    .sources a:hover {
+      border-color: rgba(247, 193, 114, 0.76);
+    }
+
+    .card.ramadan-focus {
+      border-color: rgba(247, 193, 114, 0.8);
+      box-shadow: 0 0 0 1px rgba(247, 193, 114, 0.34), 0 10px 25px rgba(0, 0, 0, 0.32);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(7, 19, 43, 0.76);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .panel h3 {
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .panel p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    .steps {
+      display: grid;
+      gap: 6px;
+    }
+
+    .step {
+      border: 1px solid rgba(132, 212, 255, 0.29);
+      border-radius: 9px;
+      background: rgba(5, 15, 33, 0.84);
+      padding: 8px;
+      font-size: 13px;
+      color: #c4ddf9;
+      line-height: 1.75;
+    }
+
+    .links {
+      display: grid;
+      gap: 6px;
+    }
+
+    .links a {
+      text-decoration: none;
+      color: #d6ecff;
+      border: 1px solid rgba(132, 212, 255, 0.3);
+      border-radius: 8px;
+      padding: 7px 9px;
+      background: rgba(5, 15, 33, 0.84);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="app">
+    <div class="top">
+      <a href="./index.html">العودة للرئيسية</a>
+      <strong>Astronomy DZ / Quran & Astronomy</strong>
+    </div>
+
+    <section class="hero">
+      <h1>روابط معرفية بين القرآن الكريم وعلم الفلك</h1>
+      <p>
+        هذه الواجهة تقدم ربطًا معرفيًا: نص قرآني + ملاحظة فلكية حديثة + مصدر ويب مباشر. الهدف تعليمي
+        وتدبري، مع الحفاظ على أن التفسير التفصيلي للآيات يرجع لأهل التفسير.
+      </p>
+      <div class="note">
+        ملاحظة منهجية: المحتوى أدناه يعرض "تقاطعات معرفية" بين النص والكون، وليس حكمًا نهائيًا على المعنى التفسيري.
+      </div>
+      <div class="ramadan-box" id="ramadanBox">
+        <div class="ramadan-head">
+          <strong>نافذة رمضانية فلكية</strong>
+          <span class="ramadan-badge" id="ramadanBadge">جاري الحساب...</span>
+        </div>
+        <div class="ramadan-grid">
+          <div class="ramadan-item">
+            <span>التاريخ الهجري (تقريبي)</span>
+            <strong id="ramadanHijri">--</strong>
+          </div>
+          <div class="ramadan-item">
+            <span>طور القمر الليلة</span>
+            <strong id="ramadanMoon">--</strong>
+          </div>
+          <div class="ramadan-item">
+            <span>نسبة الإضاءة القمرية</span>
+            <strong id="ramadanIllum">--</strong>
+          </div>
+        </div>
+        <div class="ramadan-plan">
+          <div class="ramadan-plan-row">
+            <span>خطة رمضان المعرفية (30 يوم)</span>
+            <strong id="ramadanPlanDay">-- / 30</strong>
+          </div>
+          <div class="ramadan-progress"><div id="ramadanPlanProgress"></div></div>
+          <div class="ramadan-subnote" id="ramadanPlanHint">ورد اليوم سيظهر هنا.</div>
+        </div>
+        <div class="ramadan-actions">
+          <button type="button" id="ramadanDailyBtn">ورد علمي اليوم</button>
+          <button type="button" id="ramadanDoneBtn">تم ورد اليوم</button>
+          <button type="button" id="ramadanContinueBtn">أكمل من آخر موضع</button>
+          <button type="button" id="ramadanResetBtn">إعادة خطة 30 يوم</button>
+        </div>
+        <div class="ramadan-subnote">يعتمد التقويم هنا على الحساب الفلكي (Hijri civil) وقد يختلف يومًا عن الإعلان المحلي.</div>
+      </div>
+      <div class="hud">
+        <div class="stat">
+          <div class="v" data-count="13">0</div>
+          <div class="k">محاور فلكية مرتبطة بآيات</div>
+        </div>
+        <div class="stat">
+          <div class="v" data-count="33">0</div>
+          <div class="k">روابط ويب موثقة داخل الصفحة</div>
+        </div>
+        <div class="stat">
+          <div class="v" data-count="13">0</div>
+          <div class="k">بطاقات ربط فلكي تربط النص بالظاهرة</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="cards">
+        <article class="card">
+          <h2>1) اتساع الكون</h2>
+          <p class="ayah">
+            ﴿ وَالسَّمَاءَ بَنَيْنَاهَا بِأَيْدٍ وَإِنَّا لَمُوسِعُونَ ﴾
+            <span class="meta">(الذاريات: 47)</span>
+          </p>
+          <p class="science">
+            في علم الكونيات الحديث، توسع الكون يُقاس برصد الانزياح الأحمر للمجرات البعيدة، وهو أساس نموذج
+            الكون المتوسع في المراجع العلمية الحديثة.
+          </p>
+          <div class="sources">
+            <a href="https://legacy.quran.com/51/47" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/asset/hubble/the-expanding-universe/" target="_blank" rel="noopener noreferrer">NASA: The Expanding Universe</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>2) حركة الأجرام في أفلاك</h2>
+          <p class="ayah">
+            ﴿ وَهُوَ الَّذِي خَلَقَ اللَّيْلَ وَالنَّهَارَ وَالشَّمْسَ وَالْقَمَرَ ۖ كُلٌّ فِي فَلَكٍ يَسْبَحُونَ ﴾
+            <span class="meta">(الأنبياء: 33)</span>
+          </p>
+          <p class="science">
+            تؤكد بيانات NASA أن القمر يدور حول الأرض تقريبًا كل 27 يومًا، وأن الأرض تدور حول الشمس كل
+            365.25 يومًا. هذا يوضح الطبيعة المدارية المنتظمة لحركة الأجرام.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/21/33" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/moon/facts/" target="_blank" rel="noopener noreferrer">NASA Moon Facts</a>
+            <a href="https://science.nasa.gov/earth/facts/" target="_blank" rel="noopener noreferrer">NASA Earth Facts</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>3) الشمس ضياء والقمر نور</h2>
+          <p class="ayah">
+            ﴿ هُوَ الَّذِي جَعَلَ الشَّمْسَ ضِيَاءً وَالْقَمَرَ نُورًا وَقَدَّرَهُ مَنَازِلَ لِتَعْلَمُوا عَدَدَ السِّنِينَ وَالْحِسَابَ ﴾
+            <span class="meta">(يونس: 5)</span>
+          </p>
+          <p class="science">
+            تصف NASA ضوء القمر بأنه ضوء شمسي منعكس عن سطحه، بينما الشمس هي المصدر الرئيسي للضوء في نظامنا
+            الشمسي. كما أن منازل القمر مرتبطة بالتقويم والحساب الزمني.
+          </p>
+          <div class="sources">
+            <a href="https://legacy.quran.com/10/5" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/moon/moonlight/" target="_blank" rel="noopener noreferrer">NASA Moonlight</a>
+            <a href="https://science.nasa.gov/moon/moon-phases/" target="_blank" rel="noopener noreferrer">NASA Moon Phases</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>4) تعاقب الليل والنهار والحساب الزمني</h2>
+          <p class="ayah">
+            ﴿ يُكَوِّرُ اللَّيْلَ عَلَى النَّهَارِ وَيُكَوِّرُ النَّهَارَ عَلَى اللَّيْلِ ﴾
+            <span class="meta">(الزمر: 5)</span>
+          </p>
+          <p class="science">
+            يبيّن علم الفلك أن تعاقب الليل والنهار ينتج عن دوران الأرض حول محورها (حوالي 23.9 ساعة)، بينما
+            السنة الفلكية ناتجة عن دورانها حول الشمس (365.25 يومًا).
+          </p>
+          <div class="sources">
+            <a href="https://legacy.quran.com/39/5" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/earth/facts/" target="_blank" rel="noopener noreferrer">NASA Earth Rotation & Orbit</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>5) السماء كـ"سقف محفوظ"</h2>
+          <p class="ayah">
+            ﴿ وَجَعَلْنَا السَّمَاءَ سَقْفًا مَّحْفُوظًا وَهُمْ عَنْ آيَاتِهَا مُعْرِضُونَ ﴾
+            <span class="meta">(الأنبياء: 32)</span>
+          </p>
+          <p class="science">
+            غلاف الأرض الجوي يحمي الكوكب بامتصاص جزء كبير من الأشعة فوق البنفسجية (طبقة الأوزون) ويُسهم في
+            احتراق عدد كبير من الشهب قبل وصولها إلى السطح.
+          </p>
+          <div class="sources">
+            <a href="https://legacy.quran.com/21/32" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://www.nasa.gov/general/what-is-earths-atmosphere/" target="_blank" rel="noopener noreferrer">NASA: What Is Earth's Atmosphere?</a>
+            <a href="https://science.nasa.gov/mission/aura/ozone/" target="_blank" rel="noopener noreferrer">NASA Aura: Ozone</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>6) بداية الكون: رتق ثم فتق (قراءة تدبرية)</h2>
+          <p class="ayah">
+            ﴿ أَوَلَمْ يَرَ الَّذِينَ كَفَرُوا أَنَّ السَّمَاوَاتِ وَالْأَرْضَ كَانَتَا رَتْقًا فَفَتَقْنَاهُمَا ﴾
+            <span class="meta">(الأنبياء: 30)</span>
+          </p>
+          <p class="science">
+            بعض القراءات المعاصرة تربط هذا المعنى بفكرة البداية الكونية. وفي العلم الحديث يُشرح أصل الكون ضمن
+            نموذج الانفجار العظيم، مع التأكيد أن الربط هنا تدبري وليس بديلاً عن التفسير المتخصص.
+          </p>
+          <div class="sources">
+            <a href="https://legacy.quran.com/21/30" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/universe/the-big-bang/" target="_blank" rel="noopener noreferrer">NASA The Big Bang</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>7) الشمس تجري في مسارها</h2>
+          <p class="ayah">
+            ﴿ وَالشَّمْسُ تَجْرِي لِمُسْتَقَرٍّ لَّهَا ۚ ذَٰلِكَ تَقْدِيرُ الْعَزِيزِ الْعَلِيمِ ﴾
+            <span class="meta">(يس: 38)</span>
+          </p>
+          <p class="science">
+            علميًا، الشمس ليست ساكنة؛ فهي تدور حول نفسها، كما يدور النظام الشمسي كله حول مركز مجرة درب التبانة
+            في دورة طويلة تُقدّر بنحو 230 مليون سنة تقريبًا وفق بيانات NASA.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/36/38" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/sun/facts/" target="_blank" rel="noopener noreferrer">NASA Sun Facts</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>8) انتظام المسارات بين الشمس والقمر</h2>
+          <p class="ayah">
+            ﴿ لَا الشَّمْسُ يَنبَغِي لَهَا أَن تُدْرِكَ الْقَمَرَ وَلَا اللَّيْلُ سَابِقُ النَّهَارِ ۚ وَكُلٌّ فِي فَلَكٍ يَسْبَحُونَ ﴾
+            <span class="meta">(يس: 40)</span>
+          </p>
+          <p class="science">
+            تشير قوانين الميكانيكا المدارية إلى أن لكل جرم زمنه ومساره الدوري. القمر يدور حول الأرض، والأرض
+            تدور حول الشمس، وكل نظام له سرعاته وفتراته الخاصة ضمن توازن جاذبي.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/36/40" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/moon/facts/" target="_blank" rel="noopener noreferrer">NASA Moon Facts</a>
+            <a href="https://science.nasa.gov/earth/facts/" target="_blank" rel="noopener noreferrer">NASA Earth Facts</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>9) منازل القمر ودورة الأطوار</h2>
+          <p class="ayah">
+            ﴿ وَالْقَمَرَ قَدَّرْنَاهُ مَنَازِلَ حَتَّىٰ عَادَ كَالْعُرْجُونِ الْقَدِيمِ ﴾
+            <span class="meta">(يس: 39)</span>
+          </p>
+          <p class="science">
+            أطوار القمر ناتجة عن تغيّر زاوية الإضاءة بين الشمس والأرض والقمر، وتكتمل الدورة القمرية (الشهر
+            الاقتراني) في نحو 29.5 يوم، وهو أساس التقويم القمري.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/36/39" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/moon/moon-phases/" target="_blank" rel="noopener noreferrer">NASA Moon Phases</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>10) الاهتداء بالنجوم من الملاحة إلى الفضاء العميق</h2>
+          <p class="ayah">
+            ﴿ وَهُوَ الَّذِي جَعَلَ لَكُمُ النُّجُومَ لِتَهْتَدُوا بِهَا فِي ظُلُمَاتِ الْبَرِّ وَالْبَحْرِ ﴾
+            <span class="meta">(الأنعام: 97)</span>
+          </p>
+          <p class="science">
+            استخدم الإنسان النجوم تاريخيًا لتحديد الاتجاهات، وفي العصر الفضائي تطورت الفكرة إلى أنظمة توجيه
+            وملاحة دقيقة للمهمات عبر شبكات اتصال وملاحة فضائية مثل SCaN.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/6/97" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/universe/stars/" target="_blank" rel="noopener noreferrer">NASA Stars</a>
+            <a href="https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-scan/" target="_blank" rel="noopener noreferrer">NASA SCaN</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>11) مواقع النجوم وضخامة المسافات الكونية</h2>
+          <p class="ayah">
+            ﴿ فَلَا أُقْسِمُ بِمَوَاقِعِ النُّجُومِ ۝ وَإِنَّهُ لَقَسَمٌ لَّوْ تَعْلَمُونَ عَظِيمٌ ﴾
+            <span class="meta">(الواقعة: 75-76)</span>
+          </p>
+          <p class="science">
+            المسافات بين النجوم والمجرات هائلة، ولذلك يستخدم العلماء وحدة "السنة الضوئية". رؤية الأجرام البعيدة
+            تعني عمليًا النظر إلى الماضي لأن الضوء يحتاج وقتًا طويلًا ليصل إلينا.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/56/75" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://spaceplace.nasa.gov/light-year/" target="_blank" rel="noopener noreferrer">NASA: What Is a Light-Year?</a>
+            <a href="https://science.nasa.gov/universe/stars/" target="_blank" rel="noopener noreferrer">NASA Stars</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>12) الشهب كظاهرة سماوية مرئية</h2>
+          <p class="ayah">
+            ﴿ وَلَقَدْ زَيَّنَّا السَّمَاءَ الدُّنْيَا بِمَصَابِيحَ وَجَعَلْنَاهَا رُجُومًا... ﴾
+            <span class="meta">(الملك: 5)</span>
+          </p>
+          <p class="science">
+            ما نراه كشهب هو فيزيائيًا جسيمات صغيرة (نيازك دقيقة) تدخل الغلاف الجوي بسرعات عالية فتتوهج نتيجة
+            الاحتكاك والتسخين. هذا وصف رصدي للظاهرة كما تشرح NASA.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/67/5" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/solar-system/meteors-meteorites/" target="_blank" rel="noopener noreferrer">NASA Meteors & Meteorites</a>
+            <a href="https://www.nasa.gov/general/what-is-earths-atmosphere/" target="_blank" rel="noopener noreferrer">NASA Earth Atmosphere</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>13) السماء ذات البروج</h2>
+          <p class="ayah">
+            ﴿ وَالسَّمَاءِ ذَاتِ الْبُرُوجِ ﴾
+            <span class="meta">(البروج: 1)</span>
+          </p>
+          <p class="science">
+            تاريخيًا استُخدمت مجموعات النجوم (الكوكبات) لرسم خرائط السماء وتقسيمها بصريًا. وفي العلم الحديث
+            تبقى خرائط النجوم أساسًا للرصد، المعايرة، وتتبع الأجرام البعيدة.
+          </p>
+          <div class="sources">
+            <a href="https://quran.com/85/1" target="_blank" rel="noopener noreferrer">نص الآية</a>
+            <a href="https://science.nasa.gov/universe/stars/" target="_blank" rel="noopener noreferrer">NASA Stars & Constellation Context</a>
+          </div>
+        </article>
+      </div>
+
+      <aside class="panel">
+        <h3>كيف تقرأ هذه الصفحة؟</h3>
+        <p>
+          المنهج داخل الواجهة: نبدأ بالآية، ثم نضيف حقيقة فلكية من مصدر ويب موثوق، ثم نفسّر العلاقة على أنها
+          تقاطع معرفي يساعد الطالب على الفهم العلمي والتدبر.
+        </p>
+        <div class="steps">
+          <div class="step">1) اقرأ الآية في سياقها (السورة والآيات قبلها وبعدها).</div>
+          <div class="step">2) راجع الحقيقة الفلكية المرتبطة بها من رابط NASA.</div>
+          <div class="step">3) استخدم البوت الفلكي لطلب شرح رياضي أعمق (قيم، سرعات، مدارات).</div>
+        </div>
+        <h3>روابط مرجعية سريعة</h3>
+        <div class="links">
+          <a href="https://ar.wikipedia.org/wiki/%D8%B9%D9%84%D9%85_%D8%A7%D9%84%D9%81%D9%84%D9%83" target="_blank" rel="noopener noreferrer">موسوعة عامة: علم الفلك (ويكيبيديا العربية)</a>
+          <a href="https://science.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Science Portal</a>
+          <a href="https://quran.com/" target="_blank" rel="noopener noreferrer">Quran.com (نصوص السور والآيات)</a>
+        </div>
+      </aside>
+    </section>
+  </section>
+
+  <script>
+    (() => {
+      const PROGRESS_KEY = "adz_ramadan_progress_v1";
+      const KHATMA_KEY = "adz_ramadan_khatma_day_v1";
+      const cards = [...document.querySelectorAll(".cards .card")];
+      const stats = [...document.querySelectorAll("[data-count]")];
+      const ramadanBadge = document.getElementById("ramadanBadge");
+      const ramadanHijri = document.getElementById("ramadanHijri");
+      const ramadanMoon = document.getElementById("ramadanMoon");
+      const ramadanIllum = document.getElementById("ramadanIllum");
+      const ramadanPlanDay = document.getElementById("ramadanPlanDay");
+      const ramadanPlanProgress = document.getElementById("ramadanPlanProgress");
+      const ramadanPlanHint = document.getElementById("ramadanPlanHint");
+      const dailyBtn = document.getElementById("ramadanDailyBtn");
+      const doneBtn = document.getElementById("ramadanDoneBtn");
+      const continueBtn = document.getElementById("ramadanContinueBtn");
+      const resetBtn = document.getElementById("ramadanResetBtn");
+
+      function toLatinDigits(value) {
+        return (value || "")
+          .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+          .replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
+      }
+
+      function animateCount(item, target) {
+        const start = performance.now();
+        const duration = 850;
+        const tick = (now) => {
+          const p = Math.min((now - start) / duration, 1);
+          item.textContent = Math.floor(target * p).toLocaleString("ar-DZ");
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+
+      function refreshHud() {
+        const cardCount = cards.length;
+        const linksCount = document.querySelectorAll(".cards .sources a").length;
+        if (stats[0]) stats[0].dataset.count = String(cardCount);
+        if (stats[1]) stats[1].dataset.count = String(linksCount);
+        if (stats[2]) stats[2].dataset.count = String(cardCount);
+        stats.forEach((item) => animateCount(item, Number(item.dataset.count || "0")));
+      }
+
+      function readProgress() {
+        try {
+          const raw = localStorage.getItem(PROGRESS_KEY);
+          const parsed = Number(raw);
+          return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+        } catch {
+          return 0;
+        }
+      }
+
+      function saveProgress(nextIndex) {
+        try {
+          localStorage.setItem(PROGRESS_KEY, String(nextIndex));
+        } catch {
+          // Ignore storage restrictions.
+        }
+      }
+
+      function clampKhatmaDay(day) {
+        return Math.min(30, Math.max(1, Number(day) || 1));
+      }
+
+      function readKhatmaDay(defaultDay = 1) {
+        try {
+          const raw = localStorage.getItem(KHATMA_KEY);
+          const parsed = Number(raw);
+          if (Number.isFinite(parsed) && parsed >= 1 && parsed <= 30) return parsed;
+        } catch {
+          // Ignore storage restrictions.
+        }
+        return clampKhatmaDay(defaultDay);
+      }
+
+      function saveKhatmaDay(day) {
+        try {
+          localStorage.setItem(KHATMA_KEY, String(clampKhatmaDay(day)));
+        } catch {
+          // Ignore storage restrictions.
+        }
+      }
+
+      function hasKhatmaDay() {
+        try {
+          return localStorage.getItem(KHATMA_KEY) !== null;
+        } catch {
+          return false;
+        }
+      }
+
+      function focusCard(index, save = true) {
+        if (!cards.length) return;
+        const safeIndex = ((index % cards.length) + cards.length) % cards.length;
+        cards.forEach((card) => card.classList.remove("ramadan-focus"));
+        const target = cards[safeIndex];
+        if (!target) return;
+        target.classList.add("ramadan-focus");
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (save) saveProgress(safeIndex + 1);
+      }
+
+      function partNumber(parts, type) {
+        const raw = parts.find((p) => p.type === type)?.value || "";
+        const n = Number(toLatinDigits(raw).replace(/[^\d-]/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      }
+
+      function getHijri(date = new Date()) {
+        try {
+          const arFormatter = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          });
+          const enFormatter = new Intl.DateTimeFormat("en-u-ca-islamic", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric"
+          });
+          const parts = enFormatter.formatToParts(date);
+          return {
+            day: partNumber(parts, "day"),
+            month: partNumber(parts, "month"),
+            year: partNumber(parts, "year"),
+            text: arFormatter.format(date)
+          };
+        } catch {
+          return {
+            day: 0,
+            month: 0,
+            year: 0,
+            text: "غير متاح في هذا المتصفح"
+          };
+        }
+      }
+
+      function daysUntilNextRamadan() {
+        const today = new Date();
+        for (let i = 0; i <= 390; i += 1) {
+          const d = new Date(today.getTime() + i * 86400000);
+          const h = getHijri(d);
+          if (h.month === 9 && h.day === 1) return i;
+        }
+        return null;
+      }
+
+      function moonPhaseInfo(date = new Date()) {
+        const synodic = 29.530588853;
+        const knownNewMoonMs = Date.UTC(2000, 0, 6, 18, 14, 0);
+        let age = ((date.getTime() - knownNewMoonMs) / 86400000) % synodic;
+        if (age < 0) age += synodic;
+        const illumination = Math.round(((1 - Math.cos((2 * Math.PI * age) / synodic)) / 2) * 100);
+
+        let phase = "محاق";
+        if (age >= 1.85 && age < 5.54) phase = "هلال متزايد";
+        else if (age >= 5.54 && age < 9.23) phase = "تربيع أول";
+        else if (age >= 9.23 && age < 12.92) phase = "أحدب متزايد";
+        else if (age >= 12.92 && age < 16.61) phase = "بدر";
+        else if (age >= 16.61 && age < 20.30) phase = "أحدب متناقص";
+        else if (age >= 20.30 && age < 23.99) phase = "تربيع أخير";
+        else if (age >= 23.99 && age < 27.68) phase = "هلال متناقص";
+        return { phase, illumination };
+      }
+
+      function renderRamadanBox() {
+        const hijri = getHijri(new Date());
+        if (!ramadanBadge || !ramadanHijri || !ramadanMoon || !ramadanIllum) return hijri;
+        const now = new Date();
+        const moon = moonPhaseInfo(now);
+        const days = daysUntilNextRamadan();
+        ramadanHijri.textContent = hijri.text;
+        ramadanMoon.textContent = moon.phase;
+        ramadanIllum.textContent = `${moon.illumination.toLocaleString("ar-DZ")}%`;
+
+        if (hijri.month === 9) {
+          ramadanBadge.textContent = `رمضان: اليوم ${hijri.day.toLocaleString("ar-DZ")}`;
+        } else if (Number.isFinite(days)) {
+          ramadanBadge.textContent = `متبقي تقريبًا ${days.toLocaleString("ar-DZ")} يوم لرمضان`;
+        } else {
+          ramadanBadge.textContent = "وضع رمضان الفلكي جاهز";
+        }
+        return hijri;
+      }
+
+      function dayToCardIndex(day) {
+        if (!cards.length) return 0;
+        return (clampKhatmaDay(day) - 1) % cards.length;
+      }
+
+      function cardTitle(index) {
+        const title = cards[index]?.querySelector("h2")?.textContent?.trim();
+        return title || `بطاقة ${index + 1}`;
+      }
+
+      function ensureInitialKhatmaDay(hijri) {
+        if (hasKhatmaDay()) return;
+        if (hijri?.month === 9 && hijri?.day >= 1 && hijri?.day <= 30) {
+          saveKhatmaDay(hijri.day);
+          return;
+        }
+        saveKhatmaDay(1);
+      }
+
+      function renderKhatmaPlan(hijri = getHijri(new Date())) {
+        const fallback = (hijri?.month === 9 && hijri?.day >= 1 && hijri?.day <= 30) ? hijri.day : 1;
+        const day = readKhatmaDay(fallback);
+        const index = dayToCardIndex(day);
+        const progressPct = Math.round((day / 30) * 100);
+        if (ramadanPlanDay) {
+          ramadanPlanDay.textContent = `اليوم ${day.toLocaleString("ar-DZ")} / 30`;
+        }
+        if (ramadanPlanProgress) {
+          ramadanPlanProgress.style.width = `${Math.max(2, progressPct)}%`;
+        }
+        if (ramadanPlanHint) {
+          const title = cardTitle(index);
+          ramadanPlanHint.textContent = `ورد اليوم: ${title}`;
+        }
+      }
+
+      function dailyCardIndex(hijri = getHijri(new Date())) {
+        const fallback = (hijri.month === 9 && hijri.day >= 1 && hijri.day <= 30) ? hijri.day : 1;
+        return dayToCardIndex(readKhatmaDay(fallback));
+      }
+
+      if (dailyBtn) {
+        dailyBtn.addEventListener("click", () => {
+          focusCard(dailyCardIndex(), true);
+        });
+      }
+
+      if (doneBtn) {
+        doneBtn.addEventListener("click", () => {
+          const current = readKhatmaDay(1);
+          const next = current >= 30 ? 30 : current + 1;
+          saveKhatmaDay(next);
+          renderKhatmaPlan();
+          focusCard(dayToCardIndex(next), true);
+          if (ramadanBadge && next === 30) {
+            ramadanBadge.textContent = "مبارك! وصلت لليوم 30 من الخطة الرمضانية";
+          }
+        });
+      }
+
+      if (continueBtn) {
+        continueBtn.addEventListener("click", () => {
+          const next = readProgress() % Math.max(cards.length, 1);
+          focusCard(next, true);
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          saveKhatmaDay(1);
+          renderKhatmaPlan();
+          focusCard(0, true);
+        });
+      }
+
+      refreshHud();
+      const hijriNow = renderRamadanBox();
+      ensureInitialKhatmaDay(hijriNow);
+      renderKhatmaPlan(hijriNow);
+    })();
+  </script>
+  <script src="./pwa-register.js"></script>
+</body>
+</html>

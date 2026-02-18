@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (() => {
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        const manifest = document.createElement("link");
+        manifest.rel = "manifest";
+        manifest.href = "./manifest.webmanifest";
+        document.head.appendChild(manifest);
+      }
+    })();
+  </script>
+  <meta name="theme-color" content="#07152f" />
+  <title>الكواكب | Astronomy DZ</title>
+  <style>
+    :root {
+      --bg0: #050b19;
+      --bg1: #0a2046;
+      --line: rgba(130, 205, 255, 0.28);
+      --panel: rgba(7, 19, 44, 0.78);
+      --card: rgba(7, 18, 40, 0.84);
+      --text: #eaf4ff;
+      --muted: #a8c4e5;
+      --ok: #7dffbf;
+      --warn: #ffd08e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif; }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(1100px 800px at 14% 10%, rgba(43, 102, 196, 0.24), transparent 66%),
+        radial-gradient(860px 700px at 88% 88%, rgba(24, 127, 178, 0.2), transparent 66%),
+        linear-gradient(163deg, var(--bg1), var(--bg0) 64%);
+      padding: 16px;
+      display: grid;
+      place-items: center;
+    }
+
+    .app {
+      width: min(1360px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(5, 12, 28, 0.84);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+
+    .top a {
+      text-decoration: none;
+      color: #e4f2ff;
+      border: 1px solid rgba(138, 217, 255, 0.32);
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: rgba(9, 23, 49, 0.84);
+      font-size: 13px;
+    }
+
+    .hero, .panel, .mission {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 11px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hero h1 { font-size: clamp(22px, 3vw, 34px); line-height: 1.35; }
+    .hero p, .panel p, .mission p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .note {
+      border: 1px solid rgba(248, 195, 116, 0.4);
+      border-radius: 9px;
+      background: rgba(67, 44, 19, 0.24);
+      color: #ffe7c4;
+      font-size: 12px;
+      padding: 6px 9px;
+    }
+
+    .layout { display: grid; grid-template-columns: 1.8fr 1fr; gap: 12px; align-items: start; }
+    .left, .right { display: grid; gap: 10px; }
+    .right { position: sticky; top: 12px; }
+
+    .hud { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 8px; }
+    .stat {
+      border: 1px solid rgba(138, 217, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(7, 19, 43, 0.78);
+      padding: 9px;
+      display: grid;
+      gap: 2px;
+    }
+    .stat .v { font-size: 22px; font-weight: 700; color: var(--ok); line-height: 1.1; }
+    .stat .k { font-size: 12px; color: #bfd9f7; line-height: 1.55; }
+
+    .mission .focus {
+      color: #ffe7c5;
+      border: 1px solid rgba(248, 195, 116, 0.42);
+      border-radius: 9px;
+      background: rgba(65, 43, 19, 0.25);
+      padding: 8px 9px;
+      font-size: 13px;
+      line-height: 1.75;
+    }
+    .mission .status {
+      width: fit-content;
+      border: 1px solid rgba(138, 217, 255, 0.38);
+      border-radius: 999px;
+      background: rgba(6, 16, 35, 0.85);
+      color: #d2ebff;
+      font-size: 12px;
+      padding: 4px 10px;
+    }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(274px, 1fr)); gap: 10px; }
+    .object-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 156px auto;
+    }
+    .object-card.visited { border-color: rgba(125, 255, 191, 0.62); box-shadow: inset 0 0 0 1px rgba(125, 255, 191, 0.4); }
+    .image-wrap {
+      background: radial-gradient(circle at center, rgba(142, 210, 255, 0.16), rgba(10, 20, 40, 0.95));
+      display: grid;
+      place-items: center;
+      border-bottom: 1px solid rgba(138, 217, 255, 0.23);
+    }
+    .image-wrap img, .symbol-ball {
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+    }
+    .image-wrap img { object-fit: cover; }
+    .symbol-ball {
+      display: grid;
+      place-items: center;
+      font-size: 38px;
+      color: #eff8ff;
+      border: 1px solid rgba(139, 217, 255, 0.45);
+      background: radial-gradient(circle at 32% 28%, rgba(165, 225, 255, 0.35), rgba(25, 61, 104, 0.82) 70%);
+    }
+    .symbol-ball.dwarf { background: radial-gradient(circle at 34% 30%, rgba(255, 224, 168, 0.35), rgba(84, 47, 19, 0.82) 72%); }
+
+    .content { padding: 10px; display: grid; gap: 6px; }
+    .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .kind-chip {
+      border: 1px solid rgba(138, 217, 255, 0.36);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11px;
+      color: #d9eeff;
+      background: rgba(8, 23, 49, 0.8);
+    }
+    .kind-chip.dwarf { border-color: rgba(248, 195, 116, 0.48); color: #ffe8c6; background: rgba(58, 37, 18, 0.45); }
+    .content ul { list-style: none; display: grid; gap: 2px; color: #c6ddf8; font-size: 12px; line-height: 1.7; }
+
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .actions button, .actions a, .btn, .quiz-options button {
+      border: 1px solid rgba(138, 217, 255, 0.35);
+      background: rgba(5, 17, 37, 0.86);
+      color: #d8ecff;
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      text-align: right;
+    }
+
+    .compare-grid { display: grid; gap: 6px; }
+    .compare-grid label { display: grid; gap: 4px; font-size: 12px; color: #d3e8ff; }
+    .compare-grid select {
+      border: 1px solid rgba(138, 217, 255, 0.35);
+      border-radius: 8px;
+      background: rgba(6, 17, 37, 0.9);
+      color: #e3f2ff;
+      padding: 8px;
+      font-size: 13px;
+    }
+    .compare-rows { display: grid; gap: 6px; }
+    .compare-row {
+      border: 1px solid rgba(138, 217, 255, 0.28);
+      border-radius: 8px;
+      background: rgba(6, 16, 35, 0.86);
+      padding: 7px 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      color: #cbe3fe;
+    }
+
+    .quiz-question {
+      border: 1px solid rgba(138, 217, 255, 0.3);
+      border-radius: 9px;
+      background: rgba(6, 16, 36, 0.84);
+      padding: 8px 9px;
+      color: #e9f4ff;
+      font-size: 13px;
+      line-height: 1.8;
+      min-height: 58px;
+    }
+    .quiz-head {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .quiz-chip {
+      border: 1px solid rgba(138, 217, 255, 0.35);
+      border-radius: 999px;
+      background: rgba(6, 16, 35, 0.85);
+      color: #d8ecff;
+      font-size: 12px;
+      padding: 3px 9px;
+    }
+    .quiz-media {
+      border: 1px solid rgba(138, 217, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(6, 16, 36, 0.84);
+      padding: 8px;
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+    }
+    .quiz-media img {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(138, 217, 255, 0.45);
+    }
+    .quiz-modes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .mode-btn.active {
+      border-color: rgba(125, 255, 191, 0.75);
+      color: #cbffea;
+      background: rgba(10, 37, 29, 0.54);
+    }
+    .quiz-options, .badges, .actions-row { display: grid; gap: 6px; }
+    .quiz-options button.correct { border-color: rgba(125, 255, 191, 0.75); color: #cbffea; }
+    .quiz-options button.wrong { border-color: rgba(255, 155, 140, 0.75); color: #ffd3cc; }
+    .badge { border: 1px solid rgba(138, 217, 255, 0.28); border-radius: 9px; background: rgba(6, 16, 35, 0.85); padding: 8px; display: grid; gap: 3px; font-size: 12px; }
+    .badge.locked { opacity: 0.52; filter: grayscale(0.4); }
+    .badge.unlocked { border-color: rgba(125, 255, 191, 0.58); background: rgba(10, 37, 29, 0.54); }
+    .flash { font-size: 12px; color: var(--warn); min-height: 18px; }
+
+    @media (max-width: 1080px) { .layout { grid-template-columns: 1fr; } .right { position: static; } }
+  </style>
+</head>
+<body>
+  <section class="app">
+    <div class="top">
+      <a href="./index.html">العودة للرئيسية</a>
+      <strong>Astronomy DZ / Planets & Dwarf Planets</strong>
+    </div>
+
+    <section class="hero">
+      <h1>الكواكب والكواكب القزمة: مقارنة + استكشاف + إنجازات</h1>
+      <p>الواجهة الآن تدعم مقارنة أي جرمين، وتعرض تاريخ الاكتشاف والأقمار المكتشفة لكل كوكب، مع إضافة الكواكب القزمة.</p>
+      <div class="note">بالنسبة للعمالقة الغازية: عرضنا الأقمار البارزة المكتشفة بدل القائمة الكاملة الطويلة جدًا.</div>
+    </section>
+
+    <section class="layout">
+      <div class="left">
+        <section class="hud">
+          <article class="stat"><div class="v" id="statVisitedAll">0/13</div><div class="k">الأجرام المزارة (كواكب + قزمة)</div></article>
+          <article class="stat"><div class="v" id="statVisitedPlanets">0/8</div><div class="k">الكواكب المزارة</div></article>
+          <article class="stat"><div class="v" id="statVisitedDwarfs">0/5</div><div class="k">الكواكب القزمة المزارة</div></article>
+          <article class="stat"><div class="v" id="statStreak">0</div><div class="k">السلسلة اليومية (Streak)</div></article>
+          <article class="stat"><div class="v" id="statQuizBest">0/3</div><div class="k">أفضل نتيجة اختبار</div></article>
+        </section>
+
+        <section class="mission">
+          <h2>مهمة اليوم</h2>
+          <p id="missionDateText"></p>
+          <div class="focus" id="missionBody"></div>
+          <div class="status" id="missionStatus">الحالة: غير مكتملة</div>
+        </section>
+
+        <section class="cards" id="objectCards"></section>
+      </div>
+
+      <aside class="right">
+        <section class="panel">
+          <h2>مقارنة جرمين</h2>
+          <p>اختر أي جرمين للمقارنة في القطر والجاذبية وطول اليوم والسنة وتاريخ الاكتشاف.</p>
+          <div class="compare-grid">
+            <label>الجرم الأول <select id="compareA"></select></label>
+            <label>الجرم الثاني <select id="compareB"></select></label>
+          </div>
+          <div class="compare-rows" id="compareRows"></div>
+        </section>
+
+        <section class="panel">
+          <h2>مركز المسابقات الفلكية</h2>
+          <p>اختر نوع المسابقة ثم ابدأ. الصورة المرجعية لا تعرض اسم الجرم الآن.</p>
+          <div class="quiz-modes">
+            <button class="btn mode-btn active" id="modeQuickBtn">مسابقة سريعة</button>
+            <button class="btn mode-btn" id="modeDwarfBtn">مسابقة القزمة</button>
+            <button class="btn mode-btn" id="modeProBtn">مسابقة المحترفين</button>
+          </div>
+          <div class="quiz-head">
+            <span class="quiz-chip" id="quizProgress">0/3</span>
+            <span class="quiz-chip" id="quizScoreLive">النقاط: 0</span>
+            <span class="quiz-chip" id="quizModeLabel">الوضع: سريعة</span>
+          </div>
+          <figure class="quiz-media" id="quizMedia" hidden>
+            <img id="quizMediaImg" alt="صورة الجرم" />
+          </figure>
+          <div class="quiz-question" id="quizQuestion">اضغط "ابدأ الاختبار" لبدء الجولة.</div>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="flash" id="quizFlash"></div>
+          <div class="actions-row">
+            <button class="btn" id="startQuizBtn">ابدأ الاختبار</button>
+            <button class="btn" id="restartQuizBtn">إعادة</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>الإنجازات والشارات</h2>
+          <p>الشارات تفتح تلقائيًا عند تحقيق الشروط.</p>
+          <div class="badges" id="badgeList"></div>
+          <div class="actions-row"><button class="btn" id="resetProgressBtn">تصفير التقدم</button></div>
+        </section>
+      </aside>
+    </section>
+  </section>
+
+  <script src="./planets.js"></script>
+  <script src="./pwa-register.js"></script>
+</body>
+</html>

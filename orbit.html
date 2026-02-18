@@ -1,0 +1,1067 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+  <script>
+    (() => {
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        const manifest = document.createElement("link");
+        manifest.rel = "manifest";
+        manifest.href = "./manifest.webmanifest";
+        document.head.appendChild(manifest);
+      }
+    })();
+  </script>
+  <meta name="theme-color" content="#0d274c" />
+  <title>مرصد النظام الشمسي | Astronomy DZ</title>
+  <style>
+    :root {
+      --bg-0: #02050d;
+      --bg-1: #0a1730;
+      --panel: rgba(8, 18, 38, 0.88);
+      --line: rgba(129, 186, 255, 0.24);
+      --text: #e4f0ff;
+      --muted: #9bb2d9;
+      --accent: #77cbff;
+      --hud-glass: rgba(7, 16, 32, 0.46);
+      --hud-glass-strong: rgba(8, 18, 36, 0.62);
+      --hud-line: rgba(141, 201, 255, 0.22);
+      --icon-bg-a: rgba(18, 55, 104, 0.36);
+      --icon-bg-b: rgba(13, 39, 76, 0.24);
+      --icon-line: rgba(149, 210, 255, 0.36);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(1300px 900px at 20% 8%, rgba(33, 69, 150, 0.3), transparent 66%),
+        radial-gradient(900px 700px at 90% 90%, rgba(24, 109, 141, 0.25), transparent 65%),
+        linear-gradient(170deg, var(--bg-1), var(--bg-0) 64%);
+      display: grid;
+      place-items: center;
+      padding: 16px;
+    }
+
+    .app {
+      width: min(1720px, 100%);
+      min-height: min(94vh, 1060px);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(6, 13, 27, 0.75);
+      backdrop-filter: blur(7px);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
+      display: grid;
+      grid-template-columns: 360px 1fr;
+    }
+
+    .panel {
+      border-left: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(10, 22, 48, 0.95), rgba(8, 15, 32, 0.88));
+      display: grid;
+      grid-template-rows: auto auto auto auto 1fr;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 4px;
+    }
+
+    .control-group {
+      border: 1px solid var(--line);
+      background: rgba(10, 21, 43, 0.72);
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    button {
+      border: 1px solid rgba(125, 183, 255, 0.3);
+      background: linear-gradient(180deg, #123768, #0d274c);
+      color: #dcecff;
+      border-radius: 9px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: none;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      display: grid;
+      gap: 4px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    select {
+      width: 100%;
+      border-radius: 7px;
+      border: 1px solid rgba(127, 182, 255, 0.26);
+      background: rgba(8, 18, 34, 0.9);
+      color: #d8e8ff;
+      padding: 6px 8px;
+      font-size: 13px;
+    }
+
+    .checks {
+      display: grid;
+      gap: 6px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .checks label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #cde0ff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .stats,
+    .object-info,
+    .explorer-info {
+      border: 1px solid var(--line);
+      background: rgba(10, 21, 43, 0.62);
+      border-radius: 11px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #d8e9ff;
+    }
+
+    .object-info,
+    .explorer-info {
+      overflow: auto;
+    }
+
+    #scienceSources a {
+      color: #9dd9ff;
+      text-decoration: none;
+    }
+
+    #scienceSources a:hover {
+      text-decoration: underline;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      color: #9ec6ff;
+      font-weight: 700;
+    }
+
+    .ui-mode-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .quick-deck {
+      border: 1px solid rgba(134, 208, 255, 0.28);
+      border-radius: 11px;
+      background: rgba(8, 19, 36, 0.72);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .quick-btn {
+      padding: 10px 9px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .quick-btn.active {
+      border-color: rgba(157, 232, 255, 0.54);
+      box-shadow: 0 0 0 1px rgba(159, 230, 255, 0.22) inset;
+      background: linear-gradient(180deg, #24547c, #1a3e61);
+    }
+
+    .ghost-btn {
+      border-style: dashed;
+      border-color: rgba(142, 208, 255, 0.38);
+      background: linear-gradient(180deg, rgba(16, 54, 92, 0.9), rgba(10, 35, 62, 0.9));
+      font-size: 12px;
+      padding: 8px 10px;
+    }
+
+    .ui-compact .advanced-only {
+      display: none !important;
+    }
+
+    .mini-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mini-actions button {
+      padding: 7px 8px;
+      font-size: 12px;
+    }
+
+    .audio-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 8px;
+      color: #cde0ff;
+      font-size: 13px;
+    }
+
+    .audio-status {
+      font-size: 12px;
+      color: #a9d0ff;
+      background: rgba(8, 16, 30, 0.7);
+      border: 1px solid rgba(131, 188, 255, 0.22);
+      border-radius: 8px;
+      padding: 6px 8px;
+    }
+
+    .immersive-on {
+      background: linear-gradient(180deg, #1f5a7a, #164663);
+      border-color: rgba(145, 219, 255, 0.44);
+      box-shadow: 0 0 0 1px rgba(151, 222, 255, 0.18) inset;
+    }
+
+    .viewport {
+      position: relative;
+      background:
+        radial-gradient(circle at 45% 40%, rgba(36, 57, 110, 0.36), transparent 54%),
+        radial-gradient(circle at 65% 25%, rgba(38, 102, 132, 0.2), transparent 62%),
+        #040812;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    .overlay {
+      position: absolute;
+      left: 14px;
+      bottom: 12px;
+      color: #c7dbff;
+      font-size: 12px;
+      background: rgba(5, 12, 25, 0.36);
+      border: 1px solid rgba(141, 201, 255, 0.18);
+      border-radius: 8px;
+      padding: 8px 10px;
+      line-height: 1.6;
+      pointer-events: none;
+      backdrop-filter: blur(7px);
+    }
+
+    .vr-fx {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+      background:
+        radial-gradient(circle at 50% 54%, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, 0.48) 100%),
+        linear-gradient(180deg, rgba(255, 146, 82, 0.18), rgba(42, 86, 172, 0.12));
+      mix-blend-mode: screen;
+      z-index: 3;
+    }
+
+    .vr-reticle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(153, 220, 255, 0.45);
+      box-shadow: 0 0 18px rgba(84, 172, 255, 0.24), inset 0 0 16px rgba(84, 172, 255, 0.16);
+      opacity: 0;
+      transition: opacity 0.22s ease;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .vr-reticle::before,
+    .vr-reticle::after {
+      content: "";
+      position: absolute;
+      background: rgba(172, 227, 255, 0.72);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .vr-reticle::before {
+      width: 16px;
+      height: 1px;
+    }
+
+    .vr-reticle::after {
+      width: 1px;
+      height: 16px;
+    }
+
+    .vr-telemetry {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      z-index: 4;
+      min-width: 180px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #d6ebff;
+      border: 1px solid var(--hud-line);
+      border-radius: 10px;
+      background: var(--hud-glass-strong);
+      backdrop-filter: blur(9px);
+      padding: 8px 10px;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+      pointer-events: none;
+      white-space: pre-line;
+    }
+
+    .hud-top {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .hud-card {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--hud-glass);
+      border: 1px solid var(--hud-line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: #d8e8ff;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+    }
+
+    .flight-hud {
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      max-width: min(62vw, 560px);
+    }
+
+    .flight-hud .os-btn {
+      padding: 6px 8px;
+      font-size: 11px;
+    }
+
+    .fc-mode {
+      font-size: 11px;
+      color: #bfe3ff;
+      border: 1px solid rgba(149, 210, 255, 0.3);
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: rgba(7, 16, 32, 0.42);
+      white-space: nowrap;
+    }
+
+    .hud-card select {
+      min-width: 150px;
+      border-radius: 7px;
+      border: 1px solid rgba(149, 210, 255, 0.34);
+      background: rgba(8, 18, 34, 0.62);
+      color: #d8e8ff;
+      padding: 6px 8px;
+      font-size: 13px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hud-card button {
+      background: linear-gradient(180deg, var(--icon-bg-a), var(--icon-bg-b));
+      border-color: var(--icon-line);
+      backdrop-filter: blur(8px);
+    }
+
+    .hud-tag {
+      pointer-events: auto;
+      background: var(--hud-glass);
+      border: 1px solid var(--hud-line);
+      border-radius: 9px;
+      padding: 7px 9px;
+      color: #cce2ff;
+      font-size: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .on-screen-controls {
+      position: absolute;
+      inset: 12px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      align-items: end;
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 6;
+    }
+
+    .se-toolbar {
+      justify-self: center;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      border: 1px solid var(--hud-line);
+      background: var(--hud-glass);
+      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: #cde6ff;
+      font-size: 12px;
+    }
+
+    .se-toolbar label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #cde6ff;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .se-toolbar input[type="range"] {
+      width: 84px;
+    }
+
+    .se-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      margin-top: 10px;
+    }
+
+    .os-panel {
+      display: grid;
+      gap: 8px;
+      align-content: end;
+      pointer-events: none;
+    }
+
+    #movePanel {
+      justify-self: start;
+    }
+
+    #lookPanel {
+      justify-self: end;
+      align-items: end;
+    }
+
+    body.left-handed #movePanel {
+      justify-self: end;
+    }
+
+    body.left-handed #lookPanel {
+      justify-self: start;
+      align-items: start;
+    }
+
+    .os-pad {
+      width: 146px;
+      height: 146px;
+      border-radius: 18px;
+      border: 1px solid var(--hud-line);
+      background: var(--hud-glass);
+      backdrop-filter: blur(10px);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #cfe6ff;
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 8px;
+      position: relative;
+      touch-action: none;
+    }
+
+    .os-btn {
+      border: 1px solid var(--icon-line);
+      background: linear-gradient(180deg, var(--icon-bg-a), var(--icon-bg-b));
+      color: #dcecff;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      white-space: nowrap;
+      backdrop-filter: blur(9px) saturate(1.08);
+    }
+
+    .os-btn.active {
+      background: linear-gradient(180deg, rgba(35, 94, 154, 0.56), rgba(23, 66, 112, 0.4));
+      border-color: rgba(160, 220, 255, 0.45);
+      box-shadow: 0 0 0 1px rgba(151, 222, 255, 0.18) inset;
+    }
+
+    .os-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .os-chip {
+      font-size: 11px;
+      color: #a9d0ff;
+      border: 1px solid rgba(131, 188, 255, 0.22);
+      background: rgba(8, 16, 30, 0.7);
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+
+    .mouse-menu {
+      position: absolute;
+      z-index: 9;
+      min-width: 190px;
+      max-width: 260px;
+      display: none;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(143, 207, 255, 0.3);
+      background: rgba(7, 16, 32, 0.84);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .mouse-menu.open {
+      display: grid;
+    }
+
+    .mouse-menu-title {
+      font-size: 11px;
+      color: #a9d0ff;
+      padding: 2px 4px 6px;
+      border-bottom: 1px solid rgba(143, 207, 255, 0.2);
+      margin-bottom: 2px;
+    }
+
+    .mouse-menu button {
+      width: 100%;
+      text-align: right;
+      justify-content: flex-start;
+      border: 1px solid var(--icon-line);
+      background: linear-gradient(180deg, var(--icon-bg-a), var(--icon-bg-b));
+      color: #dcecff;
+      border-radius: 9px;
+      padding: 7px 9px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .mouse-menu button:disabled {
+      opacity: 0.46;
+      cursor: not-allowed;
+    }
+
+    body.vr-mode .panel {
+      display: none;
+    }
+
+    body.vr-mode .app {
+      grid-template-columns: 1fr;
+      min-height: min(96vh, 1080px);
+    }
+
+    body.touch-ui .on-screen-controls,
+    body.vr-mode.touch-ui .on-screen-controls {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.touch-ui .se-toolbar,
+    body.touch-ui .os-panel,
+    body.vr-mode.touch-ui .se-toolbar,
+    body.vr-mode.touch-ui .os-panel {
+      pointer-events: auto;
+    }
+
+    body.mobile-simple .overlay,
+    body.mobile-simple #mouseMenu,
+    body.mobile-simple .flight-hud,
+    body.mobile-simple #cameraState,
+    body.mobile-simple #seControlTag,
+    body.mobile-simple #freeCamBtn,
+    body.mobile-simple #uiDensityBtn,
+    body.mobile-simple #uiModeTag,
+    body.mobile-simple .se-toolbar .os-chip,
+    body.mobile-simple .se-toolbar label,
+    body.mobile-simple .se-toolbar input[type="range"],
+    body.mobile-simple .se-toolbar .os-btn[data-action="speed_down"],
+    body.mobile-simple .se-toolbar .os-btn[data-action="speed_up"],
+    body.mobile-simple .se-toolbar .os-btn[data-action="hand"],
+    body.mobile-simple .se-toolbar .os-btn[data-action="immersive"],
+    body.mobile-simple #movePanel .os-row:nth-of-type(2),
+    body.mobile-simple #lookPanel .os-row .os-btn[data-action="eva"],
+    body.mobile-simple #lookPanel .os-row .os-btn[data-action="sky"],
+    body.mobile-simple .panel .control-group:not(:first-of-type),
+    body.mobile-simple .panel .stats,
+    body.mobile-simple .panel .object-info,
+    body.mobile-simple .panel .explorer-info {
+      display: none !important;
+    }
+
+    body.mobile-simple .panel {
+      grid-template-rows: auto auto;
+      gap: 10px;
+    }
+
+    body.mobile-simple .hud-top {
+      gap: 6px;
+    }
+
+    body.mobile-simple .hud-card {
+      padding: 6px 8px;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    body.mobile-simple .hud-card select {
+      min-width: 132px;
+      font-size: 12px;
+    }
+
+    body.mobile-simple .se-toolbar {
+      justify-content: center;
+      padding: 6px 10px;
+    }
+
+    body.mobile-simple .os-pad {
+      width: 118px;
+      height: 118px;
+      font-size: 10px;
+    }
+
+    body.mobile-simple .os-btn {
+      padding: 7px 9px;
+      font-size: 11px;
+    }
+
+    body.mobile-profile #quickAudioBtn,
+    body.mobile-profile #quickFollowBtn,
+    body.mobile-profile #freeCamBtn,
+    body.mobile-profile #seSpeedTag {
+      display: none !important;
+    }
+
+    @media (max-width: 1100px) {
+      body.touch-ui .on-screen-controls {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      body.touch-ui .se-toolbar {
+        gap: 8px;
+        padding: 7px 10px;
+      }
+
+      body.touch-ui .se-toolbar input[type="range"] {
+        width: 72px;
+      }
+
+      body.touch-ui .os-pad {
+        width: 132px;
+        height: 132px;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        order: 2;
+      }
+
+      .viewport {
+        min-height: 58vh;
+      }
+    }
+  </style>
+</head>
+<body class="ui-compact">
+  <section class="app">
+    <aside class="panel">
+      <div>
+        <div class="title">مرصد النظام الشمسي ثلاثي الأبعاد</div>
+        <div class="sub">محاكاة ثلاثية الأبعاد مع وضع هاتف خفيف تلقائيًا للأجهزة المحمولة ووضع كامل للحاسوب.</div>
+      </div>
+
+      <div class="control-group">
+        <div class="row advanced-only">
+          <button id="toggleBtn">إيقاف</button>
+          <button id="resetBtn">إعادة الضبط</button>
+        </div>
+        <div class="ui-mode-row">
+          <button id="uiDensityBtn" class="ghost-btn" type="button">إظهار الأدوات المتقدمة</button>
+          <span id="uiModeTag" class="audio-status">وضع مبسط</span>
+        </div>
+        <div class="quick-deck">
+          <label for="quickFocusSelect">اختيار الهدف</label>
+          <select id="quickFocusSelect"></select>
+          <div class="quick-grid">
+            <button id="quickExploreBtn" class="quick-btn">استكشاف</button>
+            <button id="quickLandBtn" class="quick-btn">هبوط</button>
+            <button id="quickAudioBtn" class="quick-btn">الصوت</button>
+            <button id="quickFollowBtn" class="quick-btn">تتبع</button>
+          </div>
+        </div>
+        <div class="row advanced-only">
+          <button id="scopePresetBtn">SolarSystemScope</button>
+        </div>
+        <label for="speedRange" class="advanced-only">سرعة الزمن: <span id="speedValue">1.0x</span>
+          <input id="speedRange" type="range" min="0.1" max="20" step="0.1" value="1" />
+        </label>
+        <label for="orbitPrecisionSelect" class="advanced-only">الدقة المدارية
+          <select id="orbitPrecisionSelect">
+            <option value="fast">Kepler Fast</option>
+            <option value="precise" selected>Kepler Precise</option>
+            <option value="research">Kepler Research</option>
+          </select>
+        </label>
+        <span id="orbitPrecisionTag" class="audio-status advanced-only">Ephemeris: Kepler Precise</span>
+        <div class="row advanced-only">
+          <button id="timeNowBtn" type="button">الآن (UTC)</button>
+          <button id="timeJ2000Btn" type="button">مرجع J2000</button>
+        </div>
+        <label for="validationCheckpointSelect" class="advanced-only">Validation Checkpoint
+          <select id="validationCheckpointSelect">
+            <option value="j2000">J2000 Epoch (2000-01-01)</option>
+            <option value="apollo11">Apollo 11 Landing (1969-07-20)</option>
+            <option value="cassini_soi">Cassini Saturn Orbit Insertion (2004-07-01)</option>
+            <option value="new_horizons_pluto">New Horizons Pluto Flyby (2015-07-14)</option>
+            <option value="europa_clipper_launch">Europa Clipper Launch (2024-10-14)</option>
+          </select>
+        </label>
+        <div class="row advanced-only">
+          <button id="validationGoBtn" type="button">تطبيق Checkpoint</button>
+          <span id="validationStatus" class="audio-status">Validation: READY</span>
+        </div>
+        <span id="timeScaleTag" class="audio-status advanced-only">Time: UTC/TT scientific pipeline</span>
+        <label for="zoomRange">التكبير: <span id="zoomValue">1.00x</span>
+          <input id="zoomRange" type="range" min="0.12" max="4.5" step="0.01" value="1" />
+        </label>
+        <div class="checks advanced-only">
+          <label><input type="checkbox" id="showOrbits" checked /> المدارات</label>
+          <label><input type="checkbox" id="showInnerOrbits" checked /> إبراز الداخلية</label>
+          <label><input type="checkbox" id="showAsteroids" checked /> الكويكبات</label>
+          <label><input type="checkbox" id="showComets" checked /> المذنبات</label>
+          <label><input type="checkbox" id="showDust" checked /> الغبار الكوني</label>
+          <label><input type="checkbox" id="showTech" checked /> الأجسام التقنية</label>
+          <label><input type="checkbox" id="showLabels" checked /> التسميات</label>
+          <label><input type="checkbox" id="floatingOriginEnable" checked /> Floating Origin</label>
+        </div>
+      </div>
+
+      <div class="stats" id="simStats"></div>
+
+      <div class="object-info" id="objectInfo">
+        اختر جرمًا بالنقر عليه لعرض البيانات العلمية.
+      </div>
+
+      <div class="stats" id="scienceSources">
+        مصادر علمية: سيتم عرض مصادر الجرم المختار هنا.
+      </div>
+
+      <div class="control-group">
+        <div class="panel-title">Explorer Lab</div>
+        <div class="row advanced-only">
+          <button id="exploreBtn">استكشاف الهدف</button>
+          <button id="resetClimateBtn" class="advanced-only">إعادة المناخ</button>
+        </div>
+        <div class="row advanced-only">
+          <button id="surfaceEnterBtn">هبوط/دخول</button>
+          <button id="surfaceExitBtn" disabled>خروج مداري</button>
+        </div>
+        <div class="row advanced-only">
+          <button id="walkModeBtn" disabled>FPS / EVA</button>
+          <span id="walkStatus" class="audio-status">EVA: OFF</span>
+        </div>
+        <div class="row advanced-only">
+          <button id="surfaceTraverseBtn" disabled>تنقل كوكبي كامل</button>
+          <span id="surfaceTraverseStatus" class="audio-status">TRAVERSE: OFF</span>
+        </div>
+        <div class="row advanced-only">
+          <button id="skyLookBtn">النظر للسماء</button>
+          <span id="skyStatus" class="audio-status">SKY: READY</span>
+        </div>
+        <div class="row">
+          <button id="immersiveBtn">وضع الغمر VR</button>
+          <span id="audioStatus" class="audio-status">الصوت غير مفعل</span>
+        </div>
+        <label for="surfaceAltitudeRange" class="advanced-only">ارتفاع السطح: <span id="surfaceAltitudeValue">1.03xR</span>
+          <input id="surfaceAltitudeRange" type="range" min="1.005" max="2.4" step="0.01" value="1.03" />
+        </label>
+        <label for="landingRealismSelect" class="advanced-only">نمط الهبوط
+          <select id="landingRealismSelect">
+            <option value="assist">مساعد</option>
+            <option value="realistic" selected>واقعي</option>
+            <option value="hardcore">احترافي</option>
+          </select>
+        </label>
+        <span id="landingRealismTag" class="audio-status advanced-only">Landing Model: REALISTIC</span>
+        <label for="terrainDetailSelect" class="advanced-only">جودة التضاريس
+          <select id="terrainDetailSelect">
+            <option value="balanced" selected>Balanced</option>
+            <option value="ultra">Ultra Terrain</option>
+          </select>
+        </label>
+        <span id="terrainDetailTag" class="audio-status advanced-only">Terrain: BALANCED</span>
+        <label for="tempOffsetRange" class="advanced-only">تعديل الحرارة: <span id="tempOffsetValue">0°</span>
+          <input id="tempOffsetRange" type="range" min="-180" max="180" step="1" value="0" />
+        </label>
+        <label for="pressureRange" class="advanced-only">مضاعف الضغط: <span id="pressureValue">1.00x</span>
+          <input id="pressureRange" type="range" min="0.1" max="4" step="0.01" value="1" />
+        </label>
+        <label for="windRange" class="advanced-only">شدة الرياح: <span id="windValue">1.00x</span>
+          <input id="windRange" type="range" min="0" max="4" step="0.01" value="1" />
+        </label>
+        <div class="mini-actions advanced-only">
+          <button id="presetCalmBtn">هادئ</button>
+          <button id="presetStormBtn">عاصفة</button>
+          <button id="presetFreezeBtn">تجمد</button>
+          <button id="presetHeatBtn">حار</button>
+        </div>
+        <div class="audio-row advanced-only">
+          <label for="audioEnable" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="checkbox" id="audioEnable" checked />
+            صوت الفضاء
+          </label>
+          <label for="audioVolume">مستوى الصوت: <span id="audioVolumeValue">45%</span>
+            <input id="audioVolume" type="range" min="0" max="1" step="0.01" value="0.45" />
+          </label>
+        </div>
+        <label for="audioMode">نمط الصوت
+          <select id="audioMode">
+            <option value="realism">Planetary Realism</option>
+            <option value="cinematic">Cinematic Drift</option>
+            <option value="nasa">NASA Data Blend</option>
+            <option value="deep">Deep Space</option>
+            <option value="orbital">Orbital Hum</option>
+          </select>
+        </label>
+        <label for="touchSensitivityRange" class="advanced-only">حساسية اللمس: <span id="touchSensitivityValue">1.00x</span>
+          <input id="touchSensitivityRange" type="range" min="0.4" max="2.2" step="0.01" value="1" />
+        </label>
+        <label for="handednessSelect" class="advanced-only">تخطيط أزرار الهاتف
+          <select id="handednessSelect">
+            <option value="right">يميني (الافتراضي)</option>
+            <option value="left">أعسر</option>
+          </select>
+        </label>
+        <div class="explorer-info" id="explorerInfo">اختر جرمًا ثم اضغط "استكشاف الهدف" لتفعيل وضع الاستكشاف المناخي.</div>
+      </div>
+    </aside>
+
+    <main class="viewport" id="viewportRoot">
+      <div class="hud-top">
+        <div class="hud-card">
+          <span>الهدف:</span>
+          <select id="focusSelect"></select>
+          <button id="followBtn">تتبع</button>
+          <button id="freeCamBtn">حر</button>
+        </div>
+        <div class="hud-card flight-hud">
+          <span id="fcModeTag" class="fc-mode">FC: OFF</span>
+          <button id="fcTargetBtn" class="os-btn" type="button">TARGET</button>
+          <button id="fcProgradeBtn" class="os-btn" type="button">PRO</button>
+          <button id="fcRetrogradeBtn" class="os-btn" type="button">RET</button>
+          <button id="fcNormalBtn" class="os-btn" type="button">NML</button>
+        </div>
+        <div class="hud-tag" id="cameraState">الكاميرا: حر</div>
+        <div class="hud-tag" id="seControlTag">SE NAV: FREE ORBIT</div>
+        <div class="hud-tag" id="seSpeedTag">SE SPEED: 1.00x</div>
+      </div>
+      <canvas id="orbitCanvas" aria-label="محاكاة النظام الشمسي"></canvas>
+      <div id="vrFx" class="vr-fx"></div>
+      <div id="vrReticle" class="vr-reticle"></div>
+      <div id="vrTelemetry" class="vr-telemetry">ALT: ---</div>
+      <div id="mouseMenu" class="mouse-menu" role="menu" aria-label="Mouse actions">
+        <div class="mouse-menu-title" id="mouseMenuTitle">هدف الفأرة: ---</div>
+        <button type="button" data-menu-action="explore">استكشاف الهدف</button>
+        <button type="button" data-menu-action="follow">تتبع الهدف</button>
+        <button type="button" data-menu-action="land">هبوط / خروج مداري</button>
+        <button type="button" data-menu-action="traverse">تنقل كوكبي</button>
+        <button type="button" data-menu-action="fc_target">Flight: TARGET</button>
+        <button type="button" data-menu-action="fc_prograde">Flight: PROGRADE</button>
+        <button type="button" data-menu-action="fc_retrograde">Flight: RETROGRADE</button>
+        <button type="button" data-menu-action="fc_normal">Flight: NORMAL</button>
+        <button type="button" data-menu-action="fc_off">Flight: OFF</button>
+        <button type="button" data-menu-action="immersive">تبديل الغمر</button>
+        <button type="button" data-menu-action="audio">تبديل الصوت</button>
+        <button type="button" data-menu-action="close">إغلاق</button>
+      </div>
+      <div class="on-screen-controls" id="onScreenControls">
+        <div class="se-toolbar">
+          <button class="os-btn" id="navToggleBtn" data-action="nav_toggle" type="button" title="Toggle Advanced Navigation">NAV OFF</button>
+          <span class="os-chip">SPACE ENGINE PRESET</span>
+          <span class="os-chip">WASD + Q/E حركة</span>
+          <label for="touchSensitivityRangeVr">Touch Look</label>
+          <input id="touchSensitivityRangeVr" type="range" min="0.4" max="2.2" step="0.01" value="1" />
+          <button class="os-btn" data-action="speed_down" type="button" title="Speed Tier Down">SPEED -</button>
+          <button class="os-btn" data-action="speed_up" type="button" title="Speed Tier Up">SPEED +</button>
+          <button class="os-btn" data-action="hand" type="button" title="Swap Hands">HAND</button>
+          <button class="os-btn" data-action="immersive" type="button" title="Immersive HUD">IMM</button>
+        </div>
+        <div class="se-grid">
+          <div class="os-panel" id="movePanel">
+            <div class="os-pad" id="movePad">THRUST / STRAFE</div>
+            <div class="os-row">
+              <button class="os-btn" data-action="boost" type="button" title="Boost">BOOST</button>
+              <button class="os-btn" data-action="brake" type="button" title="Brake">BRAKE</button>
+              <button class="os-btn" data-action="jump" type="button" title="Jump">JUMP</button>
+            </div>
+            <div class="os-row">
+              <button class="os-btn" data-action="follow" type="button" title="Lock Target">LOCK</button>
+              <button class="os-btn" data-action="free" type="button" title="Free Camera">FREE</button>
+            </div>
+          </div>
+          <div class="os-panel" id="lookPanel">
+            <div class="os-pad" id="lookPad">ATTITUDE / LOOK</div>
+            <div class="os-row">
+              <button class="os-btn" data-action="eva" type="button" title="EVA">EVA</button>
+              <button class="os-btn" data-action="sky" type="button" title="Sky Look">SKY</button>
+              <button class="os-btn" data-action="land" type="button" title="Land">LAND</button>
+              <button class="os-btn" data-action="exit" type="button" title="Exit Surface">EXIT</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="overlay">
+        Space-Engine Navigation Preset<br />
+        Left Drag: Orbit | Right Drag: Pan | Right Click (Short): Action Menu<br />
+        NAV OFF (افتراضي): تحكم مداري سهل<br />
+        NAV ON: WASD + Q/E حركة | Shift: Boost | Ctrl: Brake | Alt + Z/X: Roll<br />
+        PageUp / PageDown: Speed Tier | Wheel: Zoom<br />
+        EVA: V للتبديل | Sky Look: H | Flight Computer: T/P/R/N/F | M: NAV Toggle<br />
+        Landing Model: 1=Assist | 2=Realistic | 3=Hardcore | Terrain: Balanced/Ultra | G: Global Traverse | Right Click Menu: Traverse
+      </div>
+    </main>
+  </section>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="./app-settings.js"></script>
+  <script src="./pwa-register.js"></script>
+  <script>
+    (() => {
+      const showWarn = () => {
+        const warn = document.createElement("div");
+        warn.style.position = "fixed";
+        warn.style.inset = "16px";
+        warn.style.zIndex = "9999";
+        warn.style.display = "grid";
+        warn.style.placeItems = "center";
+        warn.style.padding = "18px";
+        warn.style.border = "1px solid rgba(255, 176, 176, 0.4)";
+        warn.style.borderRadius = "12px";
+        warn.style.background = "rgba(22, 8, 16, 0.92)";
+        warn.style.color = "#ffd5d5";
+        warn.style.font = '600 14px/1.8 "Cairo", "Segoe UI", Tahoma, Arial, sans-serif';
+        warn.style.textAlign = "center";
+        warn.innerHTML =
+          "تعذّر تحميل محاكاة المدار من الملفات المحلية.<br>" +
+          'شغّل <code style="color:#fff">run.bat</code> مباشرة (بدون server mode)،<br>' +
+          'أو استخدم <code style="color:#fff">run.bat server</code> للتشغيل عبر localhost.';
+        document.body.appendChild(warn);
+      };
+
+      const moduleScript = document.createElement("script");
+      moduleScript.type = "module";
+      moduleScript.src = "./orbit.js?v=20260217-33";
+      moduleScript.onerror = () => {
+        if (location.protocol === "file:") showWarn();
+      };
+      document.body.appendChild(moduleScript);
+    })();
+  </script>
+</body>
+</html>

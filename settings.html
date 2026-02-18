@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (() => {
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        const manifest = document.createElement("link");
+        manifest.rel = "manifest";
+        manifest.href = "./manifest.webmanifest";
+        document.head.appendChild(manifest);
+      }
+    })();
+  </script>
+  <meta name="theme-color" content="#0d274c" />
+  <title>الإعدادات | Astronomy DZ</title>
+  <style>
+    :root {
+      --bg0: #050a17;
+      --bg1: #0f1f3e;
+      --line: rgba(132, 190, 255, 0.28);
+      --panel: rgba(8, 17, 34, 0.78);
+      --text: #e8f3ff;
+      --muted: #9fb8d9;
+      --developer-bg: url("./assets/images/developer-about-bg.jpg");
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 780px at 10% 10%, rgba(45, 99, 178, 0.25), transparent 66%),
+        radial-gradient(900px 680px at 90% 90%, rgba(28, 132, 166, 0.2), transparent 68%),
+        linear-gradient(165deg, var(--bg1), var(--bg0) 62%);
+      padding: 16px;
+      display: grid;
+      place-items: center;
+    }
+
+    .app {
+      width: min(860px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(6, 13, 27, 0.82);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+
+    .top a {
+      text-decoration: none;
+      color: #d9ecff;
+      border: 1px solid rgba(138, 198, 255, 0.3);
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: rgba(8, 18, 36, 0.76);
+      font-size: 13px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .group {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .group-title {
+      font-size: 13px;
+      color: #b8dcff;
+      letter-spacing: 0.2px;
+      font-weight: 700;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #d2e6ff;
+    }
+
+    select,
+    button,
+    input[type="range"] {
+      border: 1px solid rgba(128, 192, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(8, 18, 36, 0.9);
+      color: #e1efff;
+      padding: 8px 10px;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    button {
+      width: auto;
+      cursor: pointer;
+      min-width: 120px;
+    }
+
+    input[type="range"] {
+      padding: 6px;
+      accent-color: #78c8ff;
+    }
+
+    .range-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .value-chip {
+      min-width: 52px;
+      text-align: center;
+      font-size: 12px;
+      color: #cfe9ff;
+      border: 1px solid rgba(128, 194, 255, 0.32);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: rgba(8, 18, 36, 0.7);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .status {
+      font-size: 13px;
+      color: #b6dcff;
+      border: 1px solid rgba(128, 195, 255, 0.26);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: rgba(8, 18, 36, 0.62);
+    }
+
+    .developer-note {
+      position: relative;
+      overflow: hidden;
+      font-size: 13px;
+      color: #eaf3ff;
+      line-height: 1.9;
+      border: 1px solid rgba(126, 190, 255, 0.28);
+      border-radius: 12px;
+      padding: 12px;
+      background:
+        linear-gradient(160deg, rgba(5, 12, 26, 0.72), rgba(5, 14, 34, 0.84)),
+        var(--developer-bg) center / cover no-repeat;
+      box-shadow: inset 0 0 0 1px rgba(132, 196, 255, 0.14);
+    }
+
+    .developer-note::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(6, 12, 26, 0.12), rgba(4, 10, 24, 0.78)),
+        radial-gradient(80% 70% at 12% 12%, rgba(119, 193, 255, 0.15), transparent 70%);
+    }
+
+    .developer-note-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 10px;
+    }
+
+    .developer-note-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #f0f8ff;
+      text-shadow: 0 0 16px rgba(112, 195, 255, 0.28);
+    }
+
+    .developer-note p {
+      margin: 0;
+    }
+
+    .developer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #d8eeff;
+      border: 1px solid rgba(138, 204, 255, 0.36);
+      border-radius: 999px;
+      background: rgba(8, 20, 38, 0.62);
+      width: fit-content;
+      padding: 6px 12px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .developer-link:hover {
+      border-color: rgba(152, 219, 255, 0.64);
+      box-shadow: 0 0 0 1px rgba(152, 219, 255, 0.22);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 740px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+      .actions {
+        justify-content: stretch;
+      }
+      .actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="app">
+    <div class="top">
+      <a id="homeLink" href="./index.html">العودة للرئيسية</a>
+      <strong>Astronomy DZ / Settings</strong>
+    </div>
+
+    <h1 id="pageTitle">الإعدادات</h1>
+
+    <div class="group">
+      <div id="experienceTitle" class="group-title">إعدادات التجربة</div>
+      <div class="row">
+        <label id="langLabel" for="langSelect">اللغة</label>
+        <select id="langSelect">
+          <option value="ar">العربية</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div class="row">
+        <label id="qualityLabel" for="qualitySelect">جودة الرسوم</label>
+        <select id="qualitySelect">
+          <option value="auto">تلقائي</option>
+          <option value="high">عالية</option>
+          <option value="balanced">متوسطة</option>
+          <option value="low">منخفضة</option>
+        </select>
+      </div>
+      <div class="row">
+        <label id="motionLabel" for="motionSelect">حدة الحركة والمؤثرات</label>
+        <select id="motionSelect">
+          <option value="full">كاملة</option>
+          <option value="reduced">متوسطة</option>
+          <option value="minimal">منخفضة</option>
+        </select>
+      </div>
+      <div class="row">
+        <label id="soundModeLabel" for="soundModeSelect">نمط الصوت</label>
+        <select id="soundModeSelect">
+          <option value="cinematic">Cinematic</option>
+          <option value="nasa">NASA Blend</option>
+          <option value="deep">Deep Space</option>
+          <option value="orbital">Orbital Hum</option>
+          <option value="off">إيقاف</option>
+        </select>
+      </div>
+      <div class="row">
+        <label id="soundVolumeLabel" for="soundVolumeRange">مستوى الصوت العام</label>
+        <div class="range-wrap">
+          <input id="soundVolumeRange" type="range" min="0" max="1" step="0.01" value="0.45" />
+          <span id="soundVolumeValue" class="value-chip">45%</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="saveBtn" type="button">حفظ الإعدادات</button>
+        <button id="resetBtn" type="button">إعادة ضبط</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <div id="developerTitle" class="group-title">عن المطور</div>
+      <div id="developerNote" class="developer-note"></div>
+    </div>
+
+    <p id="hintText" class="hint">هذه الإعدادات تؤثر على واجهة البوت والمحاكاة المدارية والصوت، ويتم حفظها محليًا في المتصفح.</p>
+    <div id="status" class="status">الحالة: جاهز</div>
+  </section>
+
+  <script src="./app-settings.js"></script>
+  <script>
+    (() => {
+      const api = window.ADZSettings;
+      if (!api) return;
+
+      const ui = {
+        lang: document.getElementById("langSelect"),
+        quality: document.getElementById("qualitySelect"),
+        motion: document.getElementById("motionSelect"),
+        soundMode: document.getElementById("soundModeSelect"),
+        soundVolume: document.getElementById("soundVolumeRange"),
+        soundVolumeValue: document.getElementById("soundVolumeValue"),
+        save: document.getElementById("saveBtn"),
+        reset: document.getElementById("resetBtn"),
+        status: document.getElementById("status"),
+        pageTitle: document.getElementById("pageTitle"),
+        homeLink: document.getElementById("homeLink"),
+        experienceTitle: document.getElementById("experienceTitle"),
+        langLabel: document.getElementById("langLabel"),
+        qualityLabel: document.getElementById("qualityLabel"),
+        motionLabel: document.getElementById("motionLabel"),
+        soundModeLabel: document.getElementById("soundModeLabel"),
+        soundVolumeLabel: document.getElementById("soundVolumeLabel"),
+        developerTitle: document.getElementById("developerTitle"),
+        developerNote: document.getElementById("developerNote"),
+        hintText: document.getElementById("hintText")
+      };
+
+      const I18N = {
+        ar: {
+          pageTitle: "الإعدادات",
+          homeLink: "العودة للرئيسية",
+          experienceTitle: "إعدادات التجربة",
+          langLabel: "اللغة",
+          qualityLabel: "جودة الرسوم",
+          motionLabel: "حدة الحركة والمؤثرات",
+          soundModeLabel: "نمط الصوت",
+          soundVolumeLabel: "مستوى الصوت العام",
+          saveBtn: "حفظ الإعدادات",
+          resetBtn: "إعادة ضبط",
+          developerTitle: "عن المطور",
+          developerNote: `
+            <div class="developer-note-content">
+              <div class="developer-note-title">🌌 نبذة عن المطور</div>
+              <p>أنا شاب جزائري شغوف بعلم الفلك والتقنية، أؤمن بأن السماء ليست فقط مجالًا للدهشة، بل طريقًا للتفكر والمعرفة.</p>
+              <p>أنشأت تطبيق <strong>Astronomy DZ</strong> بهدف تبسيط علم الفلك باللغة العربية، وجعل استكشاف الكون تجربة تفاعلية ممتعة لكل مهتم بالنجوم والكواكب.</p>
+              <p>أعمل على تطوير نفسي في مجال البرمجة وصناعة المحتوى العلمي، وأسعى لربط الاكتشافات الكونية بالتأمل والإيمان، مستلهمًا ذلك من إشارات القرآن الكريم إلى الكون والسماء.</p>
+              <p>هدفي أن يصبح هذا المشروع منصة تعليمية حقيقية تنشر الوعي الفلكي في الجزائر والعالم العربي.</p>
+              <p>صفحتي على تيك توك:</p>
+              <a class="developer-link" href="https://www.tiktok.com/@k.m1691?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">@k.m1691</a>
+            </div>
+          `,
+          hintText: "هذه الإعدادات تؤثر على واجهة البوت والمحاكاة المدارية والصوت، ويتم حفظها محليًا في المتصفح.",
+          statusReady: "الحالة: جاهز",
+          statusSaved: "الحالة: تم حفظ الإعدادات",
+          statusReset: "الحالة: تمت إعادة الضبط",
+          quality: { auto: "تلقائي", high: "عالية", balanced: "متوسطة", low: "منخفضة" },
+          motion: { full: "كاملة", reduced: "متوسطة", minimal: "منخفضة" },
+          sound: {
+            cinematic: "سينمائي",
+            nasa: "مزيج ناسا",
+            deep: "فضاء عميق",
+            orbital: "همهمة مدارية",
+            off: "إيقاف"
+          }
+        },
+        en: {
+          pageTitle: "Settings",
+          homeLink: "Back to Home",
+          experienceTitle: "Experience Settings",
+          langLabel: "Language",
+          qualityLabel: "Graphics Quality",
+          motionLabel: "Motion and Effects",
+          soundModeLabel: "Sound Profile",
+          soundVolumeLabel: "Master Volume",
+          saveBtn: "Save Settings",
+          resetBtn: "Reset",
+          developerTitle: "About the Developer",
+          developerNote: `
+            <div class="developer-note-content">
+              <div class="developer-note-title">🌌 About The Developer</div>
+              <p>I am a young Algerian passionate about astronomy and technology. I believe the sky is not only a source of wonder, but also a path to reflection and knowledge.</p>
+              <p>I built <strong>Astronomy DZ</strong> to simplify astronomy in Arabic and make space exploration an engaging interactive experience for everyone interested in stars and planets.</p>
+              <p>I continue to grow in programming and science communication, and I aim to connect cosmic discoveries with contemplation and faith.</p>
+              <p>My goal is to make this project a true educational platform that spreads astronomy awareness in Algeria and the Arab world.</p>
+              <p>My TikTok page:</p>
+              <a class="developer-link" href="https://www.tiktok.com/@k.m1691?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">@k.m1691</a>
+            </div>
+          `,
+          hintText: "These settings affect Astro Bot language, orbital simulation quality, and sound. They are saved locally in your browser.",
+          statusReady: "Status: Ready",
+          statusSaved: "Status: Settings saved",
+          statusReset: "Status: Defaults restored",
+          quality: { auto: "Auto", high: "High", balanced: "Balanced", low: "Low" },
+          motion: { full: "Full", reduced: "Reduced", minimal: "Minimal" },
+          sound: {
+            cinematic: "Cinematic",
+            nasa: "NASA Blend",
+            deep: "Deep Space",
+            orbital: "Orbital Hum",
+            off: "Off"
+          }
+        }
+      };
+
+      const getLang = () => (ui.lang.value === "en" ? "en" : "ar");
+      const getText = () => I18N[getLang()];
+
+      const renderVolume = (value) => {
+        const pct = Math.round(Number(value) * 100);
+        ui.soundVolumeValue.textContent = `${Number.isFinite(pct) ? pct : 0}%`;
+      };
+
+      const renderLabels = () => {
+        const t = getText();
+        document.documentElement.lang = getLang();
+        document.documentElement.dir = getLang() === "ar" ? "rtl" : "ltr";
+        ui.pageTitle.textContent = t.pageTitle;
+        ui.homeLink.textContent = t.homeLink;
+        ui.experienceTitle.textContent = t.experienceTitle;
+        ui.langLabel.textContent = t.langLabel;
+        ui.qualityLabel.textContent = t.qualityLabel;
+        ui.motionLabel.textContent = t.motionLabel;
+        ui.soundModeLabel.textContent = t.soundModeLabel;
+        ui.soundVolumeLabel.textContent = t.soundVolumeLabel;
+        ui.save.textContent = t.saveBtn;
+        ui.reset.textContent = t.resetBtn;
+        ui.developerTitle.textContent = t.developerTitle;
+        ui.developerNote.innerHTML = t.developerNote;
+        ui.hintText.textContent = t.hintText;
+
+        Array.from(ui.quality.options).forEach((option) => {
+          option.textContent = t.quality[option.value] || option.value;
+        });
+        Array.from(ui.motion.options).forEach((option) => {
+          option.textContent = t.motion[option.value] || option.value;
+        });
+        Array.from(ui.soundMode.options).forEach((option) => {
+          option.textContent = t.sound[option.value] || option.value;
+        });
+      };
+
+      const setStatus = (messageKey) => {
+        const t = getText();
+        ui.status.textContent = t[messageKey] || t.statusReady;
+      };
+
+      const apply = (settings) => {
+        ui.lang.value = settings.lang;
+        ui.quality.value = settings.quality;
+        ui.motion.value = settings.motion;
+        ui.soundMode.value = settings.soundMode;
+        ui.soundVolume.value = String(settings.soundVolume);
+        renderVolume(settings.soundVolume);
+        renderLabels();
+      };
+
+      const readForm = () => ({
+        lang: ui.lang.value === "en" ? "en" : "ar",
+        quality: ui.quality.value,
+        motion: ui.motion.value,
+        soundMode: ui.soundMode.value,
+        soundVolume: Number(ui.soundVolume.value),
+        soundEnabled: ui.soundMode.value !== "off"
+      });
+
+      const current = api.load();
+      apply(current);
+      setStatus("statusReady");
+
+      ui.lang.addEventListener("change", () => {
+        renderLabels();
+        setStatus("statusReady");
+      });
+
+      ui.soundVolume.addEventListener("input", () => {
+        renderVolume(ui.soundVolume.value);
+      });
+
+      ui.soundMode.addEventListener("change", () => {
+        if (ui.soundMode.value === "off") {
+          ui.soundVolume.value = "0";
+          renderVolume(0);
+        } else if (Number(ui.soundVolume.value) === 0) {
+          ui.soundVolume.value = "0.45";
+          renderVolume(0.45);
+        }
+      });
+
+      ui.save.addEventListener("click", () => {
+        const saved = api.save(readForm());
+        apply(saved);
+        setStatus("statusSaved");
+      });
+
+      ui.reset.addEventListener("click", () => {
+        const reset = api.save(api.DEFAULTS);
+        apply(reset);
+        setStatus("statusReset");
+      });
+
+      window.addEventListener("adz:settings-changed", (event) => {
+        if (!event.detail) return;
+        apply(event.detail);
+      });
+    })();
+  </script>
+  <script src="./pwa-register.js"></script>
+</body>
+</html>

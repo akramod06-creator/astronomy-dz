@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (() => {
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        const manifest = document.createElement("link");
+        manifest.rel = "manifest";
+        manifest.href = "./manifest.webmanifest";
+        document.head.appendChild(manifest);
+      }
+    })();
+  </script>
+  <meta name="theme-color" content="#071022" />
+  <title>مستكشفون | Astronomy DZ</title>
+  <style>
+    :root {
+      --bg0: #050913;
+      --bg1: #0a1834;
+      --line: rgba(108, 196, 255, 0.26);
+      --card: rgba(6, 18, 40, 0.78);
+      --text: #eaf4ff;
+      --muted: #9fb8d8;
+      --cyan: #7fd4ff;
+      --gold: #f7bf70;
+      --ok: #79ffb7;
+      --danger: #ff9585;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 840px at 16% 8%, rgba(30, 97, 206, 0.26), transparent 64%),
+        radial-gradient(980px 760px at 88% 90%, rgba(15, 133, 186, 0.2), transparent 68%),
+        linear-gradient(162deg, var(--bg1), var(--bg0) 65%);
+      padding: 16px;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(127, 212, 255, 0.04) 0,
+        rgba(127, 212, 255, 0.01) 2px,
+        transparent 3px
+      );
+      background-size: 100% 5px;
+      mix-blend-mode: screen;
+      opacity: 0.28;
+    }
+
+    .app {
+      width: min(1280px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(4, 11, 26, 0.82);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.44);
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(7, 19, 43, 0.8);
+      padding: 10px 12px;
+      flex-wrap: wrap;
+    }
+
+    .top a {
+      text-decoration: none;
+      color: #e3f2ff;
+      border: 1px solid rgba(133, 205, 255, 0.36);
+      border-radius: 9px;
+      padding: 8px 12px;
+      background: rgba(8, 21, 46, 0.8);
+      font-size: 13px;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .top a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(247, 191, 112, 0.75);
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background:
+        radial-gradient(600px 220px at 90% 10%, rgba(247, 191, 112, 0.16), transparent 75%),
+        rgba(7, 19, 43, 0.72);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero h1 {
+      font-size: clamp(22px, 2.8vw, 34px);
+      line-height: 1.35;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .source {
+      display: inline-flex;
+      width: fit-content;
+      gap: 8px;
+      align-items: center;
+      color: var(--cyan);
+      font-size: 13px;
+      text-decoration: none;
+      border: 1px solid rgba(127, 212, 255, 0.32);
+      border-radius: 9px;
+      padding: 7px 10px;
+      background: rgba(6, 16, 34, 0.84);
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+      gap: 8px;
+    }
+
+    .stat {
+      border: 1px solid rgba(127, 212, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(6, 16, 34, 0.8);
+      padding: 10px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .stat .v {
+      color: var(--ok);
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .stat .k {
+      color: #bdd8f6;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .toolbar {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(7, 19, 43, 0.72);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .toolbar label {
+      font-size: 12px;
+      color: #c6dcf8;
+    }
+
+    .toolbar input {
+      width: 100%;
+      border: 1px solid rgba(127, 212, 255, 0.35);
+      background: rgba(6, 16, 34, 0.94);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 12px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .toolbar input:focus {
+      border-color: rgba(247, 191, 112, 0.78);
+      box-shadow: 0 0 0 2px rgba(247, 191, 112, 0.18);
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid rgba(127, 212, 255, 0.28);
+      background: rgba(6, 16, 34, 0.74);
+      color: #cbe5ff;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--card);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(247, 191, 112, 0.58);
+    }
+
+    .thumb {
+      min-height: 190px;
+      position: relative;
+      background: #09172f;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.06) contrast(1.06);
+    }
+
+    .thumb::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 34%;
+      background: linear-gradient(to top, rgba(5, 9, 19, 0.88), transparent);
+    }
+
+    .content {
+      padding: 11px 12px;
+      display: grid;
+      gap: 8px;
+      line-height: 1.72;
+    }
+
+    .content h3 {
+      font-size: 19px;
+      line-height: 1.3;
+      color: #f2f8ff;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #9fc6ea;
+    }
+
+    .bio {
+      font-size: 14px;
+      color: #d5e7ff;
+    }
+
+    .facts {
+      display: grid;
+      gap: 4px;
+      font-size: 13px;
+      color: #bfd9f8;
+      padding-right: 14px;
+    }
+
+    .impact {
+      border: 1px solid rgba(247, 191, 112, 0.42);
+      border-radius: 9px;
+      background: rgba(65, 43, 20, 0.2);
+      padding: 8px 9px;
+      font-size: 13px;
+      color: #ffe5c2;
+    }
+
+    .modern {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(7, 18, 38, 0.74);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .modern h2 {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #ecf5ff;
+    }
+
+    .modern p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    .modern-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .modern-card {
+      border: 1px solid rgba(127, 212, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(6, 16, 34, 0.82);
+      padding: 8px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .modern-card h3 {
+      color: #f1f8ff;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .modern-card p {
+      color: #c6dcf7;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .badge {
+      width: fit-content;
+      border: 1px solid rgba(121, 255, 183, 0.45);
+      border-radius: 999px;
+      background: rgba(7, 43, 31, 0.4);
+      color: #bfffdc;
+      font-size: 12px;
+      padding: 4px 9px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .modern {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .card {
+        grid-template-columns: 1fr;
+      }
+
+      .thumb {
+        min-height: 210px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="app">
+    <div class="top">
+      <a href="./index.html">العودة للرئيسية</a>
+      <strong>Astronomy DZ / Islamic Astronomy Explorers</strong>
+    </div>
+
+    <section class="hero">
+      <h1>مستكشفو السماء في عصر الحضارة الإسلامية</h1>
+      <p>
+        هذه الواجهة مبنية على صفحة ويكيبيديا: <strong>علم الفلك في عصر الحضارة الإسلامية</strong>.
+        الهدف هو ربط الإنجاز التاريخي بخط الاستكشاف الحديث: من المراصد والزيجات والأسطرلاب، إلى الملاحة الفضائية
+        وتحليل بيانات التلسكوبات الحديثة.
+      </p>
+      <a
+        class="source"
+        href="https://ar.wikipedia.org/wiki/%D8%B9%D9%84%D9%85_%D8%A7%D9%84%D9%81%D9%84%D9%83_%D9%81%D9%8A_%D8%B9%D8%B5%D8%B1_%D8%A7%D9%84%D8%AD%D8%B6%D8%A7%D8%B1%D8%A9_%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%D8%A9"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        المصدر المرجعي: ويكيبيديا
+      </a>
+      <div class="hud">
+        <div class="stat">
+          <div class="v" data-count="7">0</div>
+          <div class="k">علماء مضافون في الواجهة</div>
+        </div>
+        <div class="stat">
+          <div class="v" data-count="3">0</div>
+          <div class="k">أدوات رصد رئيسية: الأسطرلاب، الربع، الكرة الحلقية</div>
+        </div>
+        <div class="stat">
+          <div class="v" data-count="4">0</div>
+          <div class="k">مسارات تأثير مباشر على العصر الفضائي الحديث</div>
+        </div>
+        <div class="stat">
+          <div class="v" data-count="1000">0</div>
+          <div class="k">+ سنة من تراكم المعرفة الفلكية</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <label for="searchInput">بحث ذكي (اسم العالم، الأداة، المجال)</label>
+      <input id="searchInput" type="search" placeholder="مثال: البتاني، مراغة، الأسطرلاب، الجداول الفلكية..." />
+      <div class="chips">
+        <span class="chip">جداول فلكية</span>
+        <span class="chip">رصد النجوم</span>
+        <span class="chip">نمذجة حركة الكواكب</span>
+        <span class="chip">مراصد علمية</span>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="cards" id="scholarCards">
+        <article class="card" data-search="الخوارزمي زيج السندهند جداول فلكية بغداد رياضيات">
+          <div class="thumb">
+            <img
+              loading="lazy"
+              alt="محمد بن موسى الخوارزمي"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Al-Khwarizmi_portrait.jpg"
+            />
+          </div>
+          <div class="content">
+            <h3>محمد بن موسى الخوارزمي</h3>
+            <div class="meta">القرن 9م | بغداد</div>
+            <p class="bio">
+              طوّر زيج السندهند وقدم جداول فلكية دقيقة، وربط الحساب الفلكي بالمعادلات الرياضية بطريقة منهجية
+              أثرت لاحقًا في الحسابات المدارية.
+            </p>
+            <ul class="facts">
+              <li>تنظيم بيانات الرصد في جداول قابلة للتحديث.</li>
+              <li>تعزيز الجانب الحسابي للتنبؤ بالمواقع السماوية.</li>
+            </ul>
+            <p class="impact">الأثر الحديث: نفس منطق الجداول الحسابية تطور اليوم إلى نماذج رقمية لحساب مدارات الأقمار والمسابير.</p>
+          </div>
+        </article>
+
+        <article class="card" data-search="البتاني الرقة حساب السنة ميل محور الأرض مثلثات">
+          <div class="thumb">
+            <img
+              loading="lazy"
+              alt="أبو عبد الله البتاني"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Al-Battani.jpg"
+            />
+          </div>
+          <div class="content">
+            <h3>أبو عبد الله البتاني</h3>
+            <div class="meta">القرن 9-10م | الرقة</div>
+            <p class="bio">
+              حسّن قياسات طول السنة الشمسية وميل محور الأرض وطور استخدام الدوال المثلثية في الفلك الرصدي، مع دقة
+              لافتة بالنسبة لعصره.
+            </p>
+            <ul class="facts">
+              <li>قياسات أكثر ضبطًا للدورة الشمسية.</li>
+              <li>تحسين منهج الحساب المثلثي في الرصد.</li>
+            </ul>
+            <p class="impact">الأثر الحديث: الحسابات المثلثية التي ثبّتها أصبحت أساسًا في الملاحة الفضائية وحلول التوجيه المداري.</p>
+          </div>
+        </article>
+
+        <article class="card" data-search="عبد الرحمن الصوفي صور الكواكب الثابتة النجوم المرأة المسلسلة أندروميدا">
+          <div class="thumb">
+            <img
+              loading="lazy"
+              alt="عبد الرحمن الصوفي"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Abd_al-Rahman_Al-Sufi.png"
+            />
+          </div>
+          <div class="content">
+            <h3>عبد الرحمن الصوفي</h3>
+            <div class="meta">القرن 10م | فارس</div>
+            <p class="bio">
+              صاحب كتاب «صور الكواكب الثابتة»، ووثق مواقع وخصائص عدد كبير من النجوم، مع وصف مبكر لما يعرف اليوم
+              بمجرة المرأة المسلسلة.
+            </p>
+            <ul class="facts">
+              <li>دمج الأوصاف البصرية مع الخرائط النجمية.</li>
+              <li>تثبيت منهج المقارنة بين الرصد والكتالوجات السابقة.</li>
+            </ul>
+            <p class="impact">الأثر الحديث: كتالوجات النجوم الحديثة وأنظمة التعرف الآلي على الأجرام تعتمد نفس فكرة الفهرسة المعيارية.</p>
+          </div>
+        </article>
+
+        <article class="card" data-search="البيروني قياس نصف قطر الأرض خطوط الطول والعرض الجيوديسيا">
+          <div class="thumb">
+            <img
+              loading="lazy"
+              alt="أبو الريحان البيروني"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Al-Biruni_Portrait.jpg"
+            />
+          </div>
+          <div class="content">
+            <h3>أبو الريحان البيروني</h3>
+            <div class="meta">973 - 1048م | خوارزم</div>
+            <p class="bio">
+              وضع منهجًا رياضيًا لقياس أبعاد الأرض ودرس الإحداثيات الجغرافية والفلكية بدقة، جامعًا بين الرصد
+              والحساب والجيوديسيا.
+            </p>
+            <ul class="facts">
+              <li>تقدير متقدم لنصف قطر الأرض.</li>
+              <li>توظيف الإحداثيات في ربط السماء بسطح الأرض.</li>
+            </ul>
+            <p class="impact">الأثر الحديث: أسس القياس الجيوديسي التي استخدمها تتقاطع مباشرة مع GPS ورسم الخرائط الفضائية الحديثة.</p>
+          </div>
+        </article>
+
+        <article class="card" data-search="الزرقالي الأسطرلاب الصفيحة الشاملة طليطلة جداول">
+          <div class="thumb">
+            <img
+              loading="lazy"
+              alt="أبو إسحاق الزرقالي"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Azarquiel_(MUNCYT,_Eulogia_Merle).jpg"
+            />
+          </div>
+          <div class="content">
+            <h3>أبو إسحاق الزرقالي</h3>
+            <div class="meta">القرن 11م | الأندلس</div>
+            <p class="bio">
+              ابتكر الأسطرلاب الصفيحي الشامل وساهم في الجداول الطليطلية، وقدم حلولًا عملية دقيقة للرصد في مناطق
+              جغرافية متعددة.
+            </p>
+            <ul class="facts">
+              <li>تطوير أدوات رصد أكثر مرونة للاستخدام الميداني.</li>
+              <li>تحسين الجداول المعتمدة في أوروبا لاحقًا عبر الترجمة.</li>
+            </ul>
+            <p class="impact">الأثر الحديث: روح الأدوات المعيارية القابلة للضبط تظهر اليوم في تصميم حمولات الأقمار وأجهزة التتبع.</p>
+          </div>
+        </article>
+
+        <article class="card" data-search="نصير الدين الطوسي مراغة زوج الطوسي نماذج كوكبية">
+          <div class="thumb">
+            <img
+              loading="lazy"
+              alt="نصير الدين الطوسي"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Nasir_al-Din_Tusi.jpg"
+            />
+          </div>
+          <div class="content">
+            <h3>نصير الدين الطوسي</h3>
+            <div class="meta">1201 - 1274م | مراغة</div>
+            <p class="bio">
+              أسس مرصد مراغة كمنظومة بحثية متقدمة، وطرح «زوج الطوسي» لتحسين النمذجة الرياضية للحركة الكوكبية بعيدًا
+              عن التعقيد غير الضروري.
+            </p>
+            <ul class="facts">
+              <li>تطوير مدرسة مؤسسية للعمل الفلكي الجماعي.</li>
+              <li>تقديم نموذج هندسي مؤثر في تاريخ النمذجة الكوكبية.</li>
+            </ul>
+            <p class="impact">الأثر الحديث: مراكز التحكم الفضائي الحديثة تعمل بنفس فلسفة المرصد المؤسسي: فريق + بيانات + نماذج.</p>
+          </div>
+        </article>
+
+        <article class="card" data-search="ابن الشاطر دمشق نماذج الكواكب توقيت رصد">
+          <div class="thumb">
+            <img
+              loading="lazy"
+              alt="ابن الشاطر"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Shatir500.jpg"
+            />
+          </div>
+          <div class="content">
+            <h3>ابن الشاطر</h3>
+            <div class="meta">1304 - 1375م | دمشق</div>
+            <p class="bio">
+              طوّر نماذج رياضية دقيقة لحركة الكواكب والشمس والقمر، مع اهتمام كبير بتطبيقات التوقيت والرصد العملي.
+            </p>
+            <ul class="facts">
+              <li>تبسيط النماذج الهندسية مع الحفاظ على الدقة الرصدية.</li>
+              <li>ربط الفلك النظري بالحاجة العملية اليومية.</li>
+            </ul>
+            <p class="impact">الأثر الحديث: منهج تحسين النموذج مع مقارنة الرصد المباشر هو نفس دورة تطوير أنظمة المحاكاة المدارية اليوم.</p>
+          </div>
+        </article>
+      </div>
+
+      <aside class="modern">
+        <div class="badge">تحليل تقني حديث</div>
+        <h2>دور هذا الإرث في الاستكشاف الحديث</h2>
+        <p>
+          من خلال ما تذكره ويكيبيديا عن تطور الأدوات والمراصد وانتقال المعرفة بالترجمة، يمكن تتبع خط علمي واضح:
+          رصد منظم ثم نمذجة رياضية ثم تطبيق هندسي. هذا الخط هو نفسه الذي تعتمد عليه وكالات الفضاء اليوم.
+        </p>
+        <div class="modern-grid">
+          <article class="modern-card">
+            <h3>1) من الزيج إلى الحوسبة المدارية</h3>
+            <p>الجداول الفلكية التاريخية تطورت اليوم إلى نماذج عددية لحركة الأقمار الصناعية وحساب نوافذ الإطلاق.</p>
+          </article>
+          <article class="modern-card">
+            <h3>2) من الأسطرلاب إلى الملاحة الفضائية</h3>
+            <p>فكرة استخراج الموقع من قياسات زاوية تحولت إلى أنظمة ملاحة دقيقة تجمع المستشعرات مع الحسابات الزمنية.</p>
+          </article>
+          <article class="modern-card">
+            <h3>3) من المرصد إلى مراكز البيانات الفضائية</h3>
+            <p>المراصد التاريخية رسخت العمل الجماعي المنهجي، وهو ما نراه اليوم في مراكز تحليل صور التلسكوبات والمسابير.</p>
+          </article>
+          <article class="modern-card">
+            <h3>4) من فهرسة النجوم إلى الذكاء الاصطناعي الفلكي</h3>
+            <p>تقنين الكتالوجات النجمية مهد لأساليب التصنيف الحديثة التي تستخدم تعلم الآلة لاكتشاف الأنماط الكونية.</p>
+          </article>
+        </div>
+      </aside>
+    </section>
+  </section>
+
+  <script>
+    (() => {
+      const input = document.getElementById("searchInput");
+      const cards = [...document.querySelectorAll(".card")];
+      const counters = [...document.querySelectorAll("[data-count]")];
+
+      const runCounter = (el) => {
+        const end = Number(el.dataset.count || "0");
+        const duration = 900;
+        const start = performance.now();
+        const frame = (now) => {
+          const p = Math.min((now - start) / duration, 1);
+          el.textContent = Math.floor(end * p).toLocaleString("ar-DZ");
+          if (p < 1) requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      };
+
+      counters.forEach(runCounter);
+
+      input.addEventListener("input", () => {
+        const q = input.value.trim().toLowerCase();
+        cards.forEach((card) => {
+          const text = (card.dataset.search || "").toLowerCase();
+          card.classList.toggle("hidden", Boolean(q) && !text.includes(q));
+        });
+      });
+    })();
+  </script>
+  <script src="./pwa-register.js"></script>
+</body>
+</html>
