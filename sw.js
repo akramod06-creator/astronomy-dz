@@ -1,10 +1,10 @@
-const CACHE_NAME = "astronomydz-v79-orbit-mobile-immersive-off-20260217";
+const CACHE_NAME = "astronomydz-v80-orbit-mobile-stable-20260406";
 
 const ASSETS = [
   "./",
   "./index.html",
   "./orbit.html",
-  "./orbit.js?v=20260217-33",
+  "./orbit.js?v=20260406-mobilefix1",
   "./orbit-modules/data.js",
   "./orbit-modules/audio-signatures.js",
   "./orbit-modules/science-sources.js",

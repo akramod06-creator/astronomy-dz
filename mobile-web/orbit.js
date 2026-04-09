@@ -243,9 +243,11 @@ import { createTimeSystem } from "./orbit-modules/time-system.js";
         powerPreference: "high-performance"
       };
   const HIGH_PRIORITY_MOBILE_RELIEF = new Set(["earth", "mars", "moon"]);
-  const MOBILE_TEXTURE_PRIORITY = lowEndMobile
-    ? new Set(["sun", "moon", "earth", "mars"])
-    : new Set(["sun", "moon", "mercury", "venus", "earth", "mars", "jupiter", "saturn"]);
+  const MOBILE_TEXTURE_PRIORITY = ultraLowEndMobile
+    ? new Set(["sun", "earth", "mars"])
+    : (lowEndMobile
+      ? new Set(["sun", "moon", "earth", "mars"])
+      : new Set(["sun", "moon", "mercury", "venus", "earth", "mars", "jupiter", "saturn"]));
   const STAR_COUNT = PERF.starCount;
   const ZOOM_MIN = 0.12;
   const ZOOM_MAX = 4.5;
@@ -650,12 +652,49 @@ import { createTimeSystem } from "./orbit-modules/time-system.js";
   ];
 
 
-  const renderer = new THREE.WebGLRenderer({
-    canvas: ui.canvas,
-    antialias: PERF.antialias,
-    alpha: true,
-    powerPreference: PERF.powerPreference
-  });
+  function showRendererFallback(message) {
+    setValidationStatus(`Validation: ${message}`, true);
+    if (ui.stats) {
+      ui.stats.innerHTML = `${message}<br />جرّب وضع الأمان عبر الرابط:<br /><code>?safe=1</code>`;
+    }
+    const warn = document.createElement("div");
+    warn.style.position = "absolute";
+    warn.style.inset = "16px";
+    warn.style.display = "grid";
+    warn.style.placeItems = "center";
+    warn.style.textAlign = "center";
+    warn.style.padding = "14px";
+    warn.style.border = "1px solid rgba(255,176,176,.5)";
+    warn.style.borderRadius = "12px";
+    warn.style.background = "rgba(18,8,16,.84)";
+    warn.style.color = "#ffd7d7";
+    warn.style.font = '600 13px/1.9 "Cairo","Segoe UI",Tahoma,sans-serif';
+    warn.innerHTML = `${message}<br />الهاتف لا يدعم تشغيل المحاكاة الحالية بشكل مستقر.`;
+    ui.viewportRoot?.appendChild(warn);
+  }
+
+  const glProbe = document.createElement("canvas");
+  const glContext = glProbe.getContext("webgl2", { antialias: false, powerPreference: "low-power" })
+    || glProbe.getContext("webgl", { antialias: false, powerPreference: "low-power" });
+  if (!glContext) {
+    showRendererFallback("WebGL غير متاح على هذا الجهاز");
+    return;
+  }
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({
+      canvas: ui.canvas,
+      antialias: PERF.antialias,
+      alpha: true,
+      powerPreference: PERF.powerPreference
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("WebGL renderer init failed:", error);
+    showRendererFallback("تعذّر تهيئة محرك الرسوم");
+    return;
+  }
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
@@ -896,7 +935,15 @@ import { createTimeSystem } from "./orbit-modules/time-system.js";
       texturePath(name),
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace;
-        tex.anisotropy = Math.min(PERF.maxAnisotropy, renderer.capabilities.getMaxAnisotropy());
+        if (lowEndMobile) {
+          // Keep memory footprint stable on phones by disabling mipmaps.
+          tex.generateMipmaps = false;
+          tex.minFilter = THREE.LinearFilter;
+          tex.magFilter = THREE.LinearFilter;
+          tex.anisotropy = 1;
+        } else {
+          tex.anisotropy = Math.min(PERF.maxAnisotropy, renderer.capabilities.getMaxAnisotropy());
+        }
         resolve(tex);
       },
       undefined,

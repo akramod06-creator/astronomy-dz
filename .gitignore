@@ -3,6 +3,8 @@ android/.gradle/
 android/build/
 android/app/build/
 .tmp-chrome-profile/
+.tmp-chrome-profile*/
+mobile-audit/
 __pycache__/
 *.log
 npm-debug.log*

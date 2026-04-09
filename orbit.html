@@ -1024,8 +1024,8 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+        "three": "./assets/vendor/three/build/three.module.js",
+        "three/addons/": "./assets/vendor/three/examples/jsm/"
       }
     }
   </script>
@@ -1056,7 +1056,7 @@
 
       const moduleScript = document.createElement("script");
       moduleScript.type = "module";
-      moduleScript.src = "./orbit.js?v=20260217-33";
+      moduleScript.src = "./orbit.js?v=20260406-mobilefix1";
       moduleScript.onerror = () => {
         if (location.protocol === "file:") showWarn();
       };
@@ -1065,3 +1065,4 @@
   </script>
 </body>
 </html>
+
